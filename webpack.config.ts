@@ -1,5 +1,6 @@
 import path from "path";
 import webpack, {Configuration} from "webpack";
+import * as webpackDevServer from 'webpack-dev-server';
 import HtmlWebpackPlugin from "html-webpack-plugin";
 //import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import {TsconfigPathsPlugin} from "tsconfig-paths-webpack-plugin";
@@ -15,7 +16,8 @@ const webpackConfig = (env): Configuration => ({
     },
     output: {
         path: path.join(__dirname, "/dist"),
-        filename: "build.js"
+        filename: "build.js",
+        publicPath: "/",
     },
     module: {
         rules: [
@@ -29,6 +31,9 @@ const webpackConfig = (env): Configuration => ({
             }
         ]
     },
+    devServer: {
+        historyApiFallback: true
+    },
     plugins: [
         new HtmlWebpackPlugin({
             template: "./public/index.html"
@@ -40,5 +45,6 @@ const webpackConfig = (env): Configuration => ({
         }),
     ]
 });
+
 
 export default webpackConfig;
