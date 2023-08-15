@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 interface FuncProps {
     updateToken(arg: string): void;
@@ -11,17 +12,41 @@ const Homepage: React.FC<FuncProps> = (props) => {
     const [facebookID, setFacebookID] = useState("");
     const [userName, setUserName] = useState("");
     const [profilePic, setProfilePic] = useState("");
+    const { register, handleSubmit } = useForm<FormData>();
+
+    // const picInputRef = useRef(null);
+
+    const onSubmit = async function(data) {
+        const formData = new FormData();
+        formData.append("newprofilepic", data.newprofilepic[0]);
+        try {
+            const response = await fetch("http://localhost:3000/" + facebookID + "/uploadit", {
+                method: "POST",
+                headers: {
+                    // "Content-Type": "multipart/form-data;",
+                    Authorization: `Bearer ${token}`
+                },
+                body: formData
+            });
+            const responseData = await response.json();
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(() => {
         const fetchInfo = async function(bearertoken: string, userFacebookID: string) {
             try {
-                const response = await fetch("http://localhost:3000/" + userFacebookID, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${bearertoken}`
+                const response = await fetch(
+                    "http://localhost:3000/" + userFacebookID + "/homepage",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${bearertoken}`
+                        }
                     }
-                });
+                );
                 const responseData = await response.json();
 
                 setUserName(responseData.userInfo.display_name);
@@ -40,6 +65,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
             setFacebookID(cleanFacebookIdCookie);
             props.updateToken(cleanTokenCookie);
             localStorage.setItem("token", cleanTokenCookie);
+            localStorage.setItem("facebookid", cleanFacebookIdCookie);
             fetchInfo(cleanTokenCookie, cleanFacebookIdCookie);
         }
     }, []);
@@ -52,12 +78,14 @@ const Homepage: React.FC<FuncProps> = (props) => {
                     {
                         method: "GET",
                         headers: {
-                            "Content-Type": "application/json",
+                            //"Content-Type": "application/json",
                             Authorization: `Bearer ${bearertoken}`
                         }
                     }
                 );
+
                 const blob = await response.blob();
+
                 setProfilePic(URL.createObjectURL(blob));
             } catch (err) {
                 console.log(err);
@@ -82,6 +110,21 @@ const Homepage: React.FC<FuncProps> = (props) => {
                 <h1>Homepage</h1>
                 <p>Hello {userName}</p>
                 <img src={profilePic} alt="profile pic" />
+                <p>Change profile pic</p>
+                <form
+                    action=""
+                    encType="multipart/form-data"
+                    method="post"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
+                    <input
+                        type="file"
+                        className="form-control-file"
+                        name="newprofilepic"
+                        {...register("newprofilepic")}
+                    />
+                    <input type="submit" value="Submit!" className="btn btn-default" />
+                </form>
             </div>
         );
     }
