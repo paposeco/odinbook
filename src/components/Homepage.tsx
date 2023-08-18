@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import React, {useState, useEffect, useRef} from "react";
+import {Link} from "react-router-dom";
+import {useForm} from "react-hook-form";
 
 interface FuncProps {
     updateToken(arg: string): void;
+}
+
+type FormValues = {
+    newprofilepic: string;
 }
 
 const Homepage: React.FC<FuncProps> = (props) => {
@@ -12,11 +16,11 @@ const Homepage: React.FC<FuncProps> = (props) => {
     const [facebookID, setFacebookID] = useState("");
     const [userName, setUserName] = useState("");
     const [profilePic, setProfilePic] = useState("");
-    const { register, handleSubmit } = useForm<FormData>();
+    const {register, handleSubmit} = useForm<FormValues>();
 
     // const picInputRef = useRef(null);
 
-    const onSubmit = async function(data) {
+    const onSubmit = async function (data) {
         const formData = new FormData();
         formData.append("newprofilepic", data.newprofilepic[0]);
         try {
@@ -35,7 +39,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
     };
 
     useEffect(() => {
-        const fetchInfo = async function(bearertoken: string, userFacebookID: string) {
+        const fetchInfo = async function (bearertoken: string, userFacebookID: string) {
             try {
                 const response = await fetch(
                     "http://localhost:3000/" + userFacebookID + "/homepage",
@@ -71,7 +75,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
     }, []);
 
     useEffect(() => {
-        const fetchPic = async function(bearertoken: string, userFacebookID: string) {
+        const fetchPic = async function (bearertoken: string, userFacebookID: string) {
             try {
                 const response = await fetch(
                     "http://localhost:3000/" + userFacebookID + "/profilepic",
@@ -101,7 +105,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
         return (
             <div>
                 <h1>Homepage</h1>
-                <Link to="/login">Login with Facebook</Link>
+                <Link to="/login">Login</Link>
             </div>
         );
     } else {
