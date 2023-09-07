@@ -1,14 +1,16 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
-import {useForm} from "react-hook-form";
+import type {Post} from "../common/types";
+import PostComponent from "components/content/Post";
 
 interface FuncProps {
-    updateToken(arg: string): void;
+    updateToken(arg1: string, arg2: string): void;
+    apiurl: string;
 }
 
 type FormValues = {
     newprofilepic: string;
-}
+};
 
 const Homepage: React.FC<FuncProps> = (props) => {
     const [token, setToken] = useState("");
@@ -16,41 +18,21 @@ const Homepage: React.FC<FuncProps> = (props) => {
     const [facebookID, setFacebookID] = useState("");
     const [userName, setUserName] = useState("");
     const [profilePic, setProfilePic] = useState("");
-    const {register, handleSubmit} = useForm<FormValues>();
-
-    // const picInputRef = useRef(null);
-
-    const onSubmit = async function (data) {
-        const formData = new FormData();
-        formData.append("newprofilepic", data.newprofilepic[0]);
-        try {
-            const response = await fetch("http://localhost:3000/" + facebookID + "/uploadit", {
-                method: "POST",
-                headers: {
-                    // "Content-Type": "multipart/form-data;",
-                    Authorization: `Bearer ${token}`
-                },
-                body: formData
-            });
-            const responseData = await response.json();
-        } catch (err) {
-            console.log(err);
-        }
-    };
+    // const [timeline, setTimeline] = useState<Post[]>([]);
+    const [timelineCounter, setTimelineCounter] = useState(0);
+    const apiUrl = props.apiurl;
+    const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
 
     useEffect(() => {
         const fetchInfo = async function (bearertoken: string, userFacebookID: string) {
             try {
-                const response = await fetch(
-                    "http://localhost:3000/" + userFacebookID + "/homepage",
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${bearertoken}`
-                        }
+                const response = await fetch(apiUrl + userFacebookID + "/homepage", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${bearertoken}`
                     }
-                );
+                });
                 const responseData = await response.json();
 
                 setUserName(responseData.userInfo.display_name);
@@ -67,7 +49,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
             const cleanFacebookIdCookie = fullCookie.slice(semiColon + 13, fullCookie.length);
             setToken(cleanTokenCookie);
             setFacebookID(cleanFacebookIdCookie);
-            props.updateToken(cleanTokenCookie);
+            props.updateToken(cleanTokenCookie, cleanFacebookIdCookie);
             localStorage.setItem("token", cleanTokenCookie);
             localStorage.setItem("facebookid", cleanFacebookIdCookie);
             fetchInfo(cleanTokenCookie, cleanFacebookIdCookie);
@@ -77,16 +59,13 @@ const Homepage: React.FC<FuncProps> = (props) => {
     useEffect(() => {
         const fetchPic = async function (bearertoken: string, userFacebookID: string) {
             try {
-                const response = await fetch(
-                    "http://localhost:3000/" + userFacebookID + "/profilepic",
-                    {
-                        method: "GET",
-                        headers: {
-                            //"Content-Type": "application/json",
-                            Authorization: `Bearer ${bearertoken}`
-                        }
+                const response = await fetch(apiUrl + userFacebookID + "/profilepic", {
+                    method: "GET",
+                    headers: {
+                        //"Content-Type": "application/json",
+                        Authorization: `Bearer ${bearertoken}`
                     }
-                );
+                });
 
                 const blob = await response.blob();
 
@@ -101,6 +80,35 @@ const Homepage: React.FC<FuncProps> = (props) => {
     }, [facebookID, token]);
 
     // once token is fetched, query api for content
+
+    useEffect(() => {
+        const fetchTimeline = async function () {
+            try {
+                const response = await fetch(apiUrl + facebookID + "/posts/timeline", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const responseData = await response.json();
+                console.log(responseData);
+                //setTimeline(responseData.timelinePosts);
+                const postsArray = responseData.timelinePosts.map((apost: Post) => (
+                    <PostComponent postinfo={apost} key={apost.id} />
+                ));
+                console.log(postsArray);
+                setPostsToDisplay(postsArray);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        if (token !== "" && facebookID !== "") {
+            fetchTimeline();
+        }
+    }, [token, facebookID]);
+
+    // header, notificacoes e logout
     if (token === "") {
         return (
             <div>
@@ -111,24 +119,22 @@ const Homepage: React.FC<FuncProps> = (props) => {
     } else {
         return (
             <div>
-                <h1>Homepage</h1>
-                <p>Hello {userName}</p>
-                <img src={profilePic} alt="profile pic" />
-                <p>Change profile pic</p>
-                <form
-                    action=""
-                    encType="multipart/form-data"
-                    method="post"
-                    onSubmit={handleSubmit(onSubmit)}
-                >
-                    <input
-                        type="file"
-                        className="form-control-file"
-                        name="newprofilepic"
-                        {...register("newprofilepic")}
-                    />
-                    <input type="submit" value="Submit!" className="btn btn-default" />
-                </form>
+                <div className="flex flex-row gap-4">
+                    <div>
+                        <p>Friends</p>
+                        <p>Profile</p>
+                    </div>
+                    <div>
+                        <div className="flex flex-row gap-4">
+                            <p className="text-3xl">Hello {userName}</p>
+                            <img src={profilePic} alt="profile pic" />
+                        </div>
+                        <div>
+                            <p>Timeline</p>
+                            <ul>{postsToDisplay}</ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

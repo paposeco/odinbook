@@ -1,23 +1,21 @@
 // form for new post can upload file or url for image
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, {useState, useEffect} from "react";
+import {useForm} from "react-hook-form";
 
 type FormValues = {
     content: string;
     imageurl: string;
     postimage: FileList;
 };
-export default function NewPost({ apiurl }) {
-    const { register, handleSubmit } = useForm<FormValues>();
+export default function NewPost({apiurl}) {
+    const {register, handleSubmit} = useForm<FormValues>();
     const [facebookID, setfacebookID] = useState("");
     const [token, setToken] = useState("");
     const [urlImage, setUrlImage] = useState(false);
     const [fileImage, setFileImage] = useState(false);
     const [currentImageUrl, setCurrentImageUrl] = useState("");
 
-    const onSubmit = async function(data) {
-        console.log(facebookID);
-        console.log(token);
+    const onSubmit = async function (data) {
         const formData = new FormData();
         formData.append("postimage", data.postimage[0]);
         formData.append("content", data.content);
@@ -39,7 +37,7 @@ export default function NewPost({ apiurl }) {
         }
     };
 
-    const handleChange = function(event: React.FormEvent<HTMLInputElement>): void {
+    const handleChange = function (event: React.FormEvent<HTMLInputElement>): void {
         if (event.currentTarget.name === "postimage") {
             setUrlImage(true);
         } else {
