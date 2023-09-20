@@ -13,71 +13,46 @@ type FormValues = {
 };
 
 const Homepage: React.FC<FuncProps> = (props) => {
-    const [token, setToken] = useState("");
-    const [tokenFetched, setTokenFetched] = useState(false);
-    const [facebookID, setFacebookID] = useState("");
-    const [userName, setUserName] = useState("");
-    const [profilePic, setProfilePic] = useState("");
+    const apiUrl = props.apiurl;
+    const [token, setToken] = useState(localStorage.getItem("token"));
+    //   const [tokenFetched, setTokenFetched] = useState(false);
+    const [facebookID, setFacebookID] = useState(localStorage.getItem("facebookid"));
+    //   const [userName, setUserName] = useState("");
+    const [profilePic, setProfilePic] = useState(apiUrl + localStorage.getItem("profile_pic"));
     // const [timeline, setTimeline] = useState<Post[]>([]);
     const [timelineCounter, setTimelineCounter] = useState(0);
-    const apiUrl = props.apiurl;
     const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
 
-    useEffect(() => {
-        const fetchInfo = async function (bearertoken: string, userFacebookID: string) {
-            try {
-                const response = await fetch(apiUrl + userFacebookID + "/homepage", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${bearertoken}`
-                    }
-                });
-                const responseData = await response.json();
-
-                setUserName(responseData.userInfo.display_name);
-                // api request for file
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        if (document.cookie !== "" && !tokenFetched) {
-            setTokenFetched(true);
-            const fullCookie = document.cookie;
-            const semiColon = document.cookie.indexOf(";");
-            const cleanTokenCookie = fullCookie.slice(6, semiColon);
-            const cleanFacebookIdCookie = fullCookie.slice(semiColon + 13, fullCookie.length);
-            setToken(cleanTokenCookie);
-            setFacebookID(cleanFacebookIdCookie);
-            props.updateToken(cleanTokenCookie, cleanFacebookIdCookie);
-            localStorage.setItem("token", cleanTokenCookie);
-            localStorage.setItem("facebookid", cleanFacebookIdCookie);
-            fetchInfo(cleanTokenCookie, cleanFacebookIdCookie);
-        }
-    }, []);
-
-    useEffect(() => {
-        const fetchPic = async function (bearertoken: string, userFacebookID: string) {
-            try {
-                const response = await fetch(apiUrl + userFacebookID + "/profilepic", {
-                    method: "GET",
-                    headers: {
-                        //"Content-Type": "application/json",
-                        Authorization: `Bearer ${bearertoken}`
-                    }
-                });
-
-                const blob = await response.blob();
-
-                setProfilePic(URL.createObjectURL(blob));
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        if (token !== "" && facebookID !== "") {
-            fetchPic(token, facebookID);
-        }
-    }, [facebookID, token]);
+    // useEffect(() => {
+    //     const fetchInfo = async function (bearertoken: string, userFacebookID: string) {
+    //         try {
+    //             const response = await fetch(apiUrl + userFacebookID + "/homepage", {
+    //                 method: "GET",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     Authorization: `Bearer ${bearertoken}`
+    //                 }
+    //             });
+    //             const responseData = await response.json();
+    //             setProfilePic(apiUrl + responseData.userInfo.profile_pic);
+    //         } catch (err) {
+    //             console.log(err);
+    //         }
+    //     };
+    //     if (document.cookie !== "" && !tokenFetched) {
+    //        // setTokenFetched(true);
+    //         const fullCookie = document.cookie;
+    //         const semiColon = document.cookie.indexOf(";");
+    //         const cleanTokenCookie = fullCookie.slice(6, semiColon);
+    //         const cleanFacebookIdCookie = fullCookie.slice(semiColon + 13, fullCookie.length);
+    //         setToken(cleanTokenCookie);
+    //         setFacebookID(cleanFacebookIdCookie);
+    //         props.updateToken(cleanTokenCookie, cleanFacebookIdCookie);
+    //         localStorage.setItem("token", cleanTokenCookie);
+    //         localStorage.setItem("facebookid", cleanFacebookIdCookie);
+    //         fetchInfo(cleanTokenCookie, cleanFacebookIdCookie);
+    //     }
+    // }, []);
 
     // once token is fetched, query api for content
 
@@ -92,21 +67,24 @@ const Homepage: React.FC<FuncProps> = (props) => {
                     }
                 });
                 const responseData = await response.json();
-                console.log(responseData);
-                //setTimeline(responseData.timelinePosts);
                 const postsArray = responseData.timelinePosts.map((apost: Post) => (
-                    <PostComponent postinfo={apost} key={apost.id} />
+                    <PostComponent
+                        postinfo={apost}
+                        key={apost.id}
+                        apiurl={apiUrl}
+                        facebookid={facebookID}
+                        userprofileimg={profilePic}
+                    />
                 ));
-                console.log(postsArray);
                 setPostsToDisplay(postsArray);
             } catch (err) {
                 console.log(err);
             }
         };
-        if (token !== "" && facebookID !== "") {
+        if (token !== "" && facebookID !== "" && profilePic !== "") {
             fetchTimeline();
         }
-    }, [token, facebookID]);
+    }, [token, facebookID, profilePic]);
 
     // header, notificacoes e logout
     if (token === "") {
@@ -116,25 +94,17 @@ const Homepage: React.FC<FuncProps> = (props) => {
                 <Link to="/login">Login</Link>
             </div>
         );
-    } else {
+    } else if (profilePic === "") {
         return (
             <div>
-                <div className="flex flex-row gap-4">
-                    <div>
-                        <p>Friends</p>
-                        <p>Profile</p>
-                    </div>
-                    <div>
-                        <div className="flex flex-row gap-4">
-                            <p className="text-3xl">Hello {userName}</p>
-                            <img src={profilePic} alt="profile pic" />
-                        </div>
-                        <div>
-                            <p>Timeline</p>
-                            <ul>{postsToDisplay}</ul>
-                        </div>
-                    </div>
-                </div>
+                <p>loading</p>
+            </div>
+        );
+    } else {
+        return (
+            <div className="my-8">
+                <p>Timeline</p>
+                <ul>{postsToDisplay}</ul>
             </div>
         );
     }

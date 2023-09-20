@@ -6,14 +6,14 @@ import What from "components/What";
 import Loggedin from "components/Loggedin";
 import NewPost from "components/NewPost";
 import SinglePost from "components/content/SinglePost";
+import Header from "components/Header";
 //import "./styles/stylesheet.css";
 import type {UserProfile} from "./common/types";
 
 const App: React.FC = () => {
-    const [token, setToken] = useState("");
-    const [facebookID, setFacebookID] = useState("");
-    let {postID} = useParams();
-    let {postAuthorID} = useParams();
+    const [token, setToken] = useState(localStorage.getItem("token"));
+    const [facebookID, setFacebookID] = useState(localStorage.getItem("facebookid"));
+    const [userInfo, setUserInfo] = useState();
 
     // user info TYPE
     // const [userInfo, setUserInfo]
@@ -26,11 +26,13 @@ const App: React.FC = () => {
         }
     };
 
+    // place display name and profile here too
+
     // at this point, facebookid should be on a cookie?
     useEffect(() => {
         const fetchUserInfo = async function () {
             try {
-                const response = await fetch(apiURL + facebookID + "/homepage", {
+                const response = await fetch(apiURL + facebookID + "/headerinfo", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -38,36 +40,64 @@ const App: React.FC = () => {
                     }
                 });
                 const responseData = await response.json();
-                console.log(responseData);
                 // set user info type
+                console.log(responseData);
+                setUserInfo(responseData.userprofile);
+                localStorage.setItem("displayname", responseData.userprofile.display_name);
+                localStorage.setItem("profilepic", responseData.userprofile.profile_pic);
             } catch (err) {
                 console.log(err);
             }
         };
         if (token !== "") {
-            console.log(apiURL + facebookID + "/homepage");
             fetchUserInfo();
         }
     }, [token]);
 
-    return (
-        <div id="content" className="w-1/2 mx-auto">
-            <Routes>
-                <Route path="/another" element={<What />} />
-                <Route
-                    path="/"
-                    element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
-                />
-                <Route path="/loggedin" element={<Loggedin />} />
-                <Route path="/login" element={<Login apiurl={apiURL} />} />
-                <Route path="/newpost" element={<NewPost apiurl={apiURL} />} />
-                <Route
-                    path="user/:postAuthorID/post/:postID"
-                    element={<SinglePost apiurl={apiURL} />}
-                />
-            </Routes>
-        </div>
-    );
+    useEffect(() => {
+        const tokenexists = localStorage.getItem("token");
+        console.log(tokenexists);
+        if (!tokenexists) {
+            setToken("");
+        } else {
+            setToken(tokenexists);
+        }
+    }, []);
+
+    // token and facebookid should be accessible here as a starting point
+    // need to move check for login here and then that should be possible
+    // maybe I should fetch userinfo here too and just send it to every component ?
+    // maybe I could have a separate component that handles the response from logging in facebook
+
+    // facebookid and token are accessible here now
+
+    if (token === "") {
+        return (
+            <div id="content" className="w-1/2 mx-auto">
+                <Routes>
+                    <Route path="/" element={<Login apiurl={apiURL} />} />
+                    <Route path="/loggedin" element={<Loggedin updateToken={authBearerToken} />} />
+                </Routes>
+            </div>
+        );
+    } else {
+        return (
+            <div id="content" className="w-1/2 mx-auto">
+                <Header apiurl={apiURL} />
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
+                    />
+                    <Route path="/newpost" element={<NewPost apiurl={apiURL} />} />
+                    <Route
+                        path="user/:postAuthorID/post/:postID"
+                        element={<SinglePost apiurl={apiURL} />}
+                    />
+                </Routes>
+            </div>
+        );
+    }
 };
 
 export default App;
