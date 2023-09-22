@@ -1,4 +1,4 @@
-import React, {useState, useEffect, ReactEventHandler} from "react";
+import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import type {Post, Comment} from "../../common/types";
 import CommentComponent from "./Comment";
@@ -14,6 +14,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
     const [postInfo, setPostInfo] = useState<Post>(props.postinfo);
     const [commentBox, setCommentBox] = useState(false);
     const [commentContent, setCommentContent] = useState("");
+    const [imgSrc, setImgSrc] = useState("");
     const apiUrl = props.apiurl;
     const facebookID = props.facebookid;
     const token = localStorage.getItem("token");
@@ -88,27 +89,34 @@ const PostComponent: React.FC<FuncProps> = function (props) {
         }
     };
 
+    useEffect(() => {
+        if (postInfo !== undefined && postInfo.post_image !== undefined) {
+            if (postInfo.post_image.includes("images") && postInfo.post_image !== "") {
+                setImgSrc(apiUrl + postInfo.post_image);
+            } else if (postInfo.post_image !== "") {
+                setImgSrc(postInfo.post_image);
+            }
+        }
+    }, [postInfo]);
     return (
-        <li key={postInfo.id} className="flex flex-col gap-1 my-8">
+        <li key={postInfo.id} className="flex flex-col gap-1 my-8 bg-stone-100 rounded-lg p-8">
             <Link to={`user/${postInfo.author.facebook_id}`}>{postInfo.author.display_name}</Link>
             <Link to={`user/${postInfo.author.facebook_id}/post/${postInfo.id}`}>
                 {postInfo.post_date}
             </Link>
 
-            {postInfo.post_image !== "" ? (
-                <img src={apiUrl + postInfo.post_image} alt="postimage" />
-            ) : null}
+            {imgSrc !== "" ? <img src={imgSrc} alt="postimage" className="w-max mx-auto" /> : null}
             <p>{postInfo.post_content}</p>
             <p>
                 {postInfo.like_counter}{" "}
                 {postInfo.like_counter === 0 || postInfo.like_counter > 1 ? "likes" : "like"}
             </p>
-            <div className="flex flex-row justify-around">
+            <div className="flex flex-row justify-around my-2">
                 <button onClick={handleClickLike}>Like</button>
                 <button onClick={handleClickComment}>Comment</button>
             </div>
             {commentBox ? (
-                <div>
+                <div className="my-4">
                     <div className="flex flex-row">
                         <img src={props.userprofileimg} alt="profilepic" className="w-1/6" />
                         <form action="" method="" onSubmit={handleSubmit}>

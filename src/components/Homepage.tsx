@@ -15,46 +15,10 @@ type FormValues = {
 const Homepage: React.FC<FuncProps> = (props) => {
     const apiUrl = props.apiurl;
     const [token, setToken] = useState(localStorage.getItem("token"));
-    //   const [tokenFetched, setTokenFetched] = useState(false);
-    const [facebookID, setFacebookID] = useState(localStorage.getItem("facebookid"));
-    //   const [userName, setUserName] = useState("");
-    const [profilePic, setProfilePic] = useState(apiUrl + localStorage.getItem("profile_pic"));
-    // const [timeline, setTimeline] = useState<Post[]>([]);
+    const facebookID = localStorage.getItem("facebookid");
+    const profilePic = apiUrl + localStorage.getItem("profile_pic");
     const [timelineCounter, setTimelineCounter] = useState(0);
     const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
-
-    // useEffect(() => {
-    //     const fetchInfo = async function (bearertoken: string, userFacebookID: string) {
-    //         try {
-    //             const response = await fetch(apiUrl + userFacebookID + "/homepage", {
-    //                 method: "GET",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     Authorization: `Bearer ${bearertoken}`
-    //                 }
-    //             });
-    //             const responseData = await response.json();
-    //             setProfilePic(apiUrl + responseData.userInfo.profile_pic);
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     };
-    //     if (document.cookie !== "" && !tokenFetched) {
-    //        // setTokenFetched(true);
-    //         const fullCookie = document.cookie;
-    //         const semiColon = document.cookie.indexOf(";");
-    //         const cleanTokenCookie = fullCookie.slice(6, semiColon);
-    //         const cleanFacebookIdCookie = fullCookie.slice(semiColon + 13, fullCookie.length);
-    //         setToken(cleanTokenCookie);
-    //         setFacebookID(cleanFacebookIdCookie);
-    //         props.updateToken(cleanTokenCookie, cleanFacebookIdCookie);
-    //         localStorage.setItem("token", cleanTokenCookie);
-    //         localStorage.setItem("facebookid", cleanFacebookIdCookie);
-    //         fetchInfo(cleanTokenCookie, cleanFacebookIdCookie);
-    //     }
-    // }, []);
-
-    // once token is fetched, query api for content
 
     useEffect(() => {
         const fetchTimeline = async function () {
@@ -102,9 +66,8 @@ const Homepage: React.FC<FuncProps> = (props) => {
         );
     } else {
         return (
-            <div className="my-8">
-                <p>Timeline</p>
-                <ul>{postsToDisplay}</ul>
+            <div className="my-8 w-2/3 mx-auto">
+                {postsToDisplay.length > 0 ? <ul>{postsToDisplay}</ul> : <p>No posts to display</p>}
             </div>
         );
     }

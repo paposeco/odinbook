@@ -2,11 +2,14 @@ import React, {useState, useEffect} from "react";
 import {Routes, Route, useParams} from "react-router-dom";
 import Login from "components/Login";
 import Homepage from "components/Homepage";
-import What from "components/What";
 import Loggedin from "components/Loggedin";
 import NewPost from "components/NewPost";
 import SinglePost from "components/content/SinglePost";
 import Header from "components/Header";
+import FriendsList from "components/friends/FriendsList";
+import FriendsFriendsList from "components/friends/FriendsFriendsList";
+import FriendProfile from "components/friends/FriendProfile";
+import Profile from "components/userprofile/Profile";
 //import "./styles/stylesheet.css";
 import type {UserProfile} from "./common/types";
 
@@ -56,7 +59,6 @@ const App: React.FC = () => {
 
     useEffect(() => {
         const tokenexists = localStorage.getItem("token");
-        console.log(tokenexists);
         if (!tokenexists) {
             setToken("");
         } else {
@@ -73,7 +75,7 @@ const App: React.FC = () => {
 
     if (token === "") {
         return (
-            <div id="content" className="w-1/2 mx-auto">
+            <div id="content" className="w-1/2 mx-auto ">
                 <Routes>
                     <Route path="/" element={<Login apiurl={apiURL} />} />
                     <Route path="/loggedin" element={<Loggedin updateToken={authBearerToken} />} />
@@ -82,17 +84,28 @@ const App: React.FC = () => {
         );
     } else {
         return (
-            <div id="content" className="w-1/2 mx-auto">
+            <div id="content" className="w-1/2 mx-auto bg-stone-50">
                 <Header apiurl={apiURL} />
                 <Routes>
                     <Route
                         path="/"
                         element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
                     />
+                    <Route path="/friends" element={<FriendsList apiurl={apiURL} />} />
                     <Route path="/newpost" element={<NewPost apiurl={apiURL} />} />
                     <Route
-                        path="user/:postAuthorID/post/:postID"
+                        path="/user/:postAuthorID/post/:postID"
                         element={<SinglePost apiurl={apiURL} />}
+                    />
+                    <Route path="/profile/:userfacebookid" element={<Profile />} />
+                    <Route
+                        path="/user/:userfacebookid"
+                        element={<FriendProfile apiurl={apiURL} />}
+                    />
+
+                    <Route
+                        path="/user/:userfacebookid/friends"
+                        element={<FriendsFriendsList apiurl={apiURL} />}
                     />
                 </Routes>
             </div>

@@ -15,6 +15,7 @@ const SinglePost: React.FC<FuncProps> = function (props) {
     const [commentsToDisplay, setCommentsToDisplay] = useState<JSX.Element[]>();
     const [commentBox, setCommentBox] = useState(false);
     const [commentContent, setCommentContent] = useState("");
+    const [imgSrc, setImgSrc] = useState("");
     const profilePic = localStorage.getItem("profilepic");
     const apiUrl = props.apiurl;
 
@@ -118,20 +119,29 @@ const SinglePost: React.FC<FuncProps> = function (props) {
         }
     };
 
+    useEffect(() => {
+        if (postInfo !== undefined && postInfo.post_image !== undefined) {
+            if (postInfo.post_image.includes("images") && postInfo.post_image !== "") {
+                setImgSrc(apiUrl + postInfo.post_image);
+            } else if (postInfo.post_image !== "") {
+                setImgSrc(postInfo.post_image);
+            }
+        }
+    }, [postInfo]);
+
     if (!postInfo) {
         return <div>loading</div>;
     } else {
         return (
-            <div className="flex flex-col gap-1 my-8">
+            <div className="flex flex-col gap-1 my-8 bg-stone-100 rounded-lg p-8 w-2/3 mx-auto">
                 <Link to={`user/${postInfo.author.facebook_id}`}>
                     {postInfo.author.display_name}
                 </Link>
                 <Link to={`user/${postInfo.author.facebook_id}/post/${postInfo.id}`}>
                     {postInfo.post_date}
                 </Link>
-
-                {postInfo.post_image !== "" ? (
-                    <img src={apiUrl + postInfo.post_image} alt="postimage" />
+                {imgSrc !== "" ? (
+                    <img src={imgSrc} alt="postimage" className="w-max mx-auto" />
                 ) : null}
                 <p>{postInfo.post_content}</p>
                 <p>
