@@ -97,7 +97,7 @@ const App: React.FC = () => {
                         path="/user/:postAuthorID/post/:postID"
                         element={<SinglePost apiurl={apiURL} />}
                     />
-                    <Route path="/profile/:userfacebookid" element={<Profile />} />
+                    <Route path="/profile" element={<Profile apirul={apiURL} />} />
                     <Route
                         path="/user/:userfacebookid"
                         element={<FriendProfile apiurl={apiURL} />}

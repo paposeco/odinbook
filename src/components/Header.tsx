@@ -12,7 +12,9 @@ const Header: React.FC<FuncProps> = (props) => {
     return (
         <div className="flex flex-row gap-4 my-8 w-2/3 mx-auto justify-between p-8">
             <div>
-                <Link to="/">Odinbook</Link>
+                <Link to="/">
+                    <h3>Odinbook</h3>
+                </Link>
                 <div className="flex flex-row gap-2">
                     <img
                         src={props.apiurl + profilepic}
@@ -21,8 +23,12 @@ const Header: React.FC<FuncProps> = (props) => {
                     />
                     <p className="text-xl">{display_name}</p>
                 </div>
-                <Link to="/friends">Friends</Link>
-                <p>Profile</p>
+                <Link to="/friends">
+                    <h3>Friends</h3>
+                </Link>
+                <Link to="/profile">
+                    <h3>Profile</h3>
+                </Link>
             </div>
             <div className="flex flex-row gap-4">
                 <img

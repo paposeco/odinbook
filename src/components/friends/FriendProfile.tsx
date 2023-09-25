@@ -17,7 +17,33 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     const apiUrl = props.apiurl;
     const profilePic = apiUrl + localStorage.getItem("profile_pic");
     const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
+    const [statusChecked, setStatusChecked] = useState(false);
+    const [friendStatus, setFriendStatus] = useState(false);
 
+    useEffect(() => {
+        const checkFriendStatus = async function () {
+            try {
+                const response = await fetch(
+                    props.apiurl + facebookid + "/relationship/" + userfacebookid,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                const responseData = await response.json();
+                setFriendStatus(responseData.friends);
+                setStatusChecked(true);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        if (!friendStatus) {
+            checkFriendStatus();
+        }
+    }, []);
     useEffect(() => {
         const fetchUserInfo = async function () {
             const fetchurl = props.apiurl + facebookid + "/otheruserprofile/" + userfacebookid;
@@ -54,12 +80,30 @@ const UserProfile: React.FC<FuncProps> = (props) => {
             fetchUserInfo();
         }
     }, []);
-    if (infoFetched) {
+
+    const handleClick = async function (event: React.MouseEvent) {
+        const response = await fetch(apiUrl + facebookid + "/addfriend/" + userfacebookid, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const responseData = response.json();
+        console.log(responseData);
+        setFriendStatus(true);
+    };
+    if (infoFetched && statusChecked) {
         return (
             <div>
                 <h2 className="text-lg">{userInfo.display_name}</h2>
+                {friendStatus ? (
+                    <p>You are friends</p>
+                ) : (
+                    <button onClick={handleClick}>Add Friend</button>
+                )}
                 <div className="flex flex-row">
-                    <img src={apiUrl + userInfo.profile_pic} alt="profilepic" className="w-96" />
+                    <img src={apiUrl + userInfo.profile_pic} alt="profilepic" className="w-48" />
                     <div>
                         {userInfo.birthday && userInfo.birthday !== "Invalid DateTime" ? (
                             <p>{userInfo.birthday}</p>
