@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import type {UserProfile, Post} from "src/common/types";
 import PostComponent from "components/content/Post";
+import WhatsOnYourMind from "components/content/WhatsOnYourMind";
 
 interface FuncProps {
     apirul: string;
@@ -69,7 +70,7 @@ const Profile: React.FC<FuncProps> = (props) => {
                         )}
                     </div>
                 </div>
-
+                <WhatsOnYourMind apiurl={apiUrl} userprofile={true} />
                 {postsToDisplay.length > 0 ? (
                     <ul>{postsToDisplay}</ul>
                 ) : (

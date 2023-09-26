@@ -1,0 +1,154 @@
+import React, {useState, useEffect} from "react";
+import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router";
+
+interface FuncProps {
+    apiurl: string;
+    newpost?(): void;
+    userprofile: boolean;
+}
+
+type FormValues = {
+    content: string;
+    imageurl: string;
+    postimage: FileList;
+};
+
+const WhatsOnYourMind: React.FC<FuncProps> = (props) => {
+    const profile_pic = localStorage.getItem("profilepic");
+    const displayname = localStorage.getItem("displayname").split(" ");
+    const facebookID = localStorage.getItem("facebookid");
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+    const [formVisible, setFormVisible] = useState(false);
+    const {register, handleSubmit} = useForm<FormValues>();
+    const [urlImage, setUrlImage] = useState(false);
+    const [fileImage, setFileImage] = useState(false);
+    const [currentImageUrl, setCurrentImageUrl] = useState("");
+
+    const showForm = function (event: React.MouseEvent) {
+        setFormVisible(true);
+    };
+
+    const onSubmit = async function (data) {
+        const formData = new FormData();
+        formData.append("postimage", data.postimage[0]);
+        formData.append("content", data.content);
+        formData.append("imageurl", data.imageurl);
+
+        try {
+            const response = await fetch(props.apiurl + facebookID + "/posts/newpost", {
+                method: "POST",
+                headers: {
+                    // "Content-Type": "multipart/form-data;",
+                    Authorization: `Bearer ${token}`
+                },
+                body: formData
+            });
+            const responseData = await response.json();
+            //do something here
+            if (response.status === 201) {
+                setFormVisible(false);
+                if (!props.userprofile) {
+                    props.newpost();
+                }
+
+                navigate("/");
+            } else {
+                setFormVisible(false);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleChange = function (event: React.FormEvent<HTMLInputElement>): void {
+        if (event.currentTarget.name === "postimage") {
+            setUrlImage(true);
+        } else {
+            if (event.currentTarget.value === "") {
+                setCurrentImageUrl("");
+                setFileImage(false);
+            } else {
+                setCurrentImageUrl(event.currentTarget.value);
+                setFileImage(true);
+            }
+        }
+    };
+
+    return (
+        <div>
+            {!formVisible ? (
+                <div className="flex flex-row justify-start content-center p-8 my-4 gap-8">
+                    <div>
+                        <img
+                            className="w-10 h-10 rounded-full"
+                            src={props.apiurl + profile_pic}
+                            alt="profilepic"
+                        />
+                    </div>
+                    <div onClick={showForm}>
+                        <p className="text-gray-400 align-middle inline">
+                            What's on your mind, {displayname[0]}?
+                        </p>
+                    </div>
+                </div>
+            ) : null}
+
+            {formVisible ? (
+                <div className="bg-stone-100 rounded-lg p-8 my-4">
+                    <div className="flex flex-row gap-4">
+                        <img
+                            className="w-10 h-10 rounded-full"
+                            src={props.apiurl + profile_pic}
+                            alt="profilepic"
+                        />
+                        <p className="inline align-middle">{localStorage.getItem("displayname")}</p>
+                    </div>
+                    <p className="text-lg font-semibold my-4">Create post</p>
+                    <form
+                        action=""
+                        encType="multipart/form-data"
+                        method="post"
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="flex flex-col gap-4"
+                    >
+                        <textarea
+                            name="content"
+                            required
+                            {...register("content")}
+                            className="form-textarea rounded"
+                            placeholder={`What's on your mind, ${displayname[0]}?`}
+                            rows={10}
+                        ></textarea>
+                        <p>
+                            Add an image to your post by uploading a file or by adding a link to an
+                            image.
+                        </p>
+                        <input
+                            type="file"
+                            className="form-control-file"
+                            name="postimage"
+                            {...register("postimage")}
+                            disabled={fileImage}
+                            onChange={handleChange}
+                        />
+                        <input
+                            type="url"
+                            className="form-input rounded"
+                            name="imageurl"
+                            {...register("imageurl")}
+                            disabled={urlImage}
+                            onChange={handleChange}
+                            value={currentImageUrl}
+                            placeholder="Image URL"
+                        />
+                        <input type="submit" value="Post" className="text-lg font-semibold" />
+                    </form>
+                </div>
+            ) : null}
+        </div>
+    );
+};
+
+export default WhatsOnYourMind;

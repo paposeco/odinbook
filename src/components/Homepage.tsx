@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import type {Post} from "../common/types";
 import PostComponent from "components/content/Post";
+import WhatsOnYourMind from "./content/WhatsOnYourMind";
 
 interface FuncProps {
     updateToken(arg1: string, arg2: string): void;
@@ -14,11 +15,12 @@ type FormValues = {
 
 const Homepage: React.FC<FuncProps> = (props) => {
     const apiUrl = props.apiurl;
-    const [token, setToken] = useState(localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
     const facebookID = localStorage.getItem("facebookid");
     const profilePic = apiUrl + localStorage.getItem("profile_pic");
     const [timelineCounter, setTimelineCounter] = useState(0);
     const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
+    const [newPost, setNewPost] = useState(false);
 
     useEffect(() => {
         const fetchTimeline = async function () {
@@ -45,10 +47,18 @@ const Homepage: React.FC<FuncProps> = (props) => {
                 console.log(err);
             }
         };
+        if (newPost) {
+            setNewPost(false);
+            fetchTimeline();
+        }
         if (token !== "" && facebookID !== "" && profilePic !== "") {
             fetchTimeline();
         }
-    }, [token, facebookID, profilePic]);
+    }, [token, facebookID, profilePic, newPost]);
+
+    const newPostCreated = function () {
+        setNewPost(true);
+    };
 
     // header, notificacoes e logout
     if (token === "") {
@@ -67,6 +77,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
     } else {
         return (
             <div className="my-8 w-2/3 mx-auto">
+                <WhatsOnYourMind apiurl={apiUrl} newpost={newPostCreated} userprofile={false} />
                 {postsToDisplay.length > 0 ? <ul>{postsToDisplay}</ul> : <p>No posts to display</p>}
             </div>
         );

@@ -19,6 +19,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
     const [statusChecked, setStatusChecked] = useState(false);
     const [friendStatus, setFriendStatus] = useState(false);
+    const [friendRequestSent, setFriendRequestSent] = useState(false);
 
     useEffect(() => {
         const checkFriendStatus = async function () {
@@ -35,6 +36,10 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                 );
                 const responseData = await response.json();
                 setFriendStatus(responseData.friends);
+                if (!responseData.friends) {
+                    setFriendRequestSent(responseData.requestsent);
+                }
+
                 setStatusChecked(true);
             } catch (err) {
                 console.log(err);
@@ -81,6 +86,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
         }
     }, []);
 
+    // add friend
     const handleClick = async function (event: React.MouseEvent) {
         const response = await fetch(apiUrl + facebookid + "/addfriend/" + userfacebookid, {
             method: "PUT",
@@ -89,19 +95,20 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                 Authorization: `Bearer ${token}`
             }
         });
-        const responseData = response.json();
-        console.log(responseData);
+        const responseData = await response.json();
         setFriendStatus(true);
     };
+
     if (infoFetched && statusChecked) {
         return (
             <div>
                 <h2 className="text-lg">{userInfo.display_name}</h2>
-                {friendStatus ? (
-                    <p>You are friends</p>
-                ) : (
+                {friendStatus ? <p>You are friends</p> : null}
+                {!friendStatus && friendRequestSent ? <p>Friend request sent</p> : null}
+                {!friendStatus && !friendRequestSent ? (
                     <button onClick={handleClick}>Add Friend</button>
-                )}
+                ) : null}
+
                 <div className="flex flex-row">
                     <img src={apiUrl + userInfo.profile_pic} alt="profilepic" className="w-48" />
                     <div>
@@ -110,7 +117,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                         ) : null}
                         {userInfo.country ? <p>{userInfo.country}</p> : null}
                         {userInfo.friends === undefined || userInfo.friends === 0 ? (
-                            <p>No friends</p>
+                            <p>{userInfo.display_name} doesn't have any friends</p>
                         ) : (
                             <Link to={`/user/${userfacebookid}/friends`}>
                                 {userInfo.friends} {userInfo.friends > 1 ? "friends" : "friend"}

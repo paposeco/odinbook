@@ -100,10 +100,27 @@ const PostComponent: React.FC<FuncProps> = function (props) {
     }, [postInfo]);
     return (
         <li key={postInfo.id} className="flex flex-col gap-1 my-8 bg-stone-100 rounded-lg p-8">
-            <Link to={`user/${postInfo.author.facebook_id}`}>{postInfo.author.display_name}</Link>
-            <Link to={`user/${postInfo.author.facebook_id}/post/${postInfo.id}`}>
-                {postInfo.post_date}
-            </Link>
+            <div className="flex flex-row gap-4 content-center">
+                <div className="flex flex-row content-center justify-center">
+                    <img
+                        src={props.apiurl + postInfo.author.profile_pic}
+                        alt="profilepic"
+                        className="w-10 h-10 rounded-full m-auto"
+                    />
+                </div>
+                <div>
+                    <p>
+                        <Link to={`user/${postInfo.author.facebook_id}`}>
+                            {postInfo.author.display_name}
+                        </Link>
+                    </p>
+                    <p>
+                        <Link to={`user/${postInfo.author.facebook_id}/post/${postInfo.id}`}>
+                            {postInfo.post_date}
+                        </Link>
+                    </p>
+                </div>
+            </div>
 
             {imgSrc !== "" ? <img src={imgSrc} alt="postimage" className="w-max mx-auto" /> : null}
             <p>{postInfo.post_content}</p>

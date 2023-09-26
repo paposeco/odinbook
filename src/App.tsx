@@ -3,7 +3,6 @@ import {Routes, Route, useParams} from "react-router-dom";
 import Login from "components/Login";
 import Homepage from "components/Homepage";
 import Loggedin from "components/Loggedin";
-import NewPost from "components/NewPost";
 import SinglePost from "components/content/SinglePost";
 import Header from "components/Header";
 import FriendsList from "components/friends/FriendsList";
@@ -44,7 +43,6 @@ const App: React.FC = () => {
                 });
                 const responseData = await response.json();
                 // set user info type
-                console.log(responseData);
                 setUserInfo(responseData.userprofile);
                 localStorage.setItem("displayname", responseData.userprofile.display_name);
                 localStorage.setItem("profilepic", responseData.userprofile.profile_pic);
@@ -92,7 +90,6 @@ const App: React.FC = () => {
                         element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
                     />
                     <Route path="/friends" element={<FriendsList apiurl={apiURL} />} />
-                    <Route path="/newpost" element={<NewPost apiurl={apiURL} />} />
                     <Route
                         path="/user/:postAuthorID/post/:postID"
                         element={<SinglePost apiurl={apiURL} />}

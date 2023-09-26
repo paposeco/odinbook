@@ -7,8 +7,8 @@ type FormValues = {
 
 const EditProfile = function () {
     const {register, handleSubmit} = useForm<FormValues>();
-    const [facebookID, setFacebookID] = useState(localStorage.getItem("facebookid"));
-    const [token, setToken] = useState(localStorage.getItem("token"));
+    const facebookID = localStorage.getItem("facebookid");
+    const token = localStorage.getItem("token");
 
     const onSubmit = async function (data) {
         const formData = new FormData();
