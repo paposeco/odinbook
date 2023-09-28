@@ -2,11 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-html{
-    background-color: white;
+@layer base {
+    .editprofileform{
+        @apply flex flex-col gap-4 my-8;
+    }
+
+    .editprofileform div{
+        @apply flex flex-row gap-4 items-center w-1/2; 
+    }
+    .editprofileform div label{
+        @apply w-2/6;
+    }
+    .editprofileform div input, .editprofileform div select{
+        @apply w-4/6
+    }
 }
+
+/* html{
+    background-color: white;
+} */
 
 a{
     text-decoration: underline;
     color: blue;
 }
+
+.editprofileform div{
+    
+}
+

@@ -1,12 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 
 interface FuncProps {
     apiurl: string;
+    profilepic: string;
 }
 
 const Header: React.FC<FuncProps> = (props) => {
-    const profilepic = localStorage.getItem("profilepic");
     const display_name = localStorage.getItem("displayname");
 
     return (
@@ -17,7 +17,7 @@ const Header: React.FC<FuncProps> = (props) => {
                 </Link>
                 <div className="flex flex-row gap-2">
                     <img
-                        src={props.apiurl + profilepic}
+                        src={props.apiurl + props.profilepic}
                         alt="profile pic"
                         className="w-8 h-8 rounded-full"
                     />
@@ -32,7 +32,7 @@ const Header: React.FC<FuncProps> = (props) => {
             </div>
             <div className="flex flex-row gap-4">
                 <img
-                    src={props.apiurl + profilepic}
+                    src={props.apiurl + props.profilepic}
                     alt="profile pic"
                     className="w-24 h-24 rounded-full"
                 />

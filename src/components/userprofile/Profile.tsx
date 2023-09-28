@@ -53,6 +53,7 @@ const Profile: React.FC<FuncProps> = (props) => {
         return (
             <div>
                 <h2 className="text-lg">{userInfo.display_name}</h2>
+                <Link to="/editprofile">Edit profile</Link>
                 <div className="flex flex-row">
                     <img src={apiUrl + userInfo.profile_pic} alt="profilepic" className="w-48" />
                     <div>

@@ -12,6 +12,20 @@ export interface UserProfile {
     guest: boolean;
 }
 
+enum GenderEnum {
+    female = "Female",
+    male = "Male",
+    other = "Other",
+    empty = "Empty"
+}
+
+export interface EditableProfile {
+    displayname: string;
+    birthday: string;
+    gender: GenderEnum;
+    country: string;
+}
+
 export interface Friend {
     facebook_id: string;
     display_name: string;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Routes, Route, useParams} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 import Login from "components/Login";
 import Homepage from "components/Homepage";
 import Loggedin from "components/Loggedin";
@@ -9,28 +9,25 @@ import FriendsList from "components/friends/FriendsList";
 import FriendsFriendsList from "components/friends/FriendsFriendsList";
 import FriendProfile from "components/friends/FriendProfile";
 import Profile from "components/userprofile/Profile";
-//import "./styles/stylesheet.css";
-import type {UserProfile} from "./common/types";
+import EditProfile from "components/userprofile/EditProfile";
+import type {EditableProfile} from "./common/types";
 
 const App: React.FC = () => {
     const [token, setToken] = useState(localStorage.getItem("token"));
     const [facebookID, setFacebookID] = useState(localStorage.getItem("facebookid"));
-    const [userInfo, setUserInfo] = useState();
+    const [displayname, setdisplayname] = useState("");
+    const [profilepic, setprofilepic] = useState("");
+    const [userProfile, setUserProfile] = useState<EditableProfile>();
+    const [profileFetched, setProfileFetched] = useState(false);
 
-    // user info TYPE
-    // const [userInfo, setUserInfo]
     const apiURL = "http://localhost:3000/";
     const authBearerToken = function (childtoken: string, childfacebookdid: string): void {
-        // not necessary. to be removed later
         if (token === "") {
             setToken(childtoken);
             setFacebookID(childfacebookdid);
         }
     };
 
-    // place display name and profile here too
-
-    // at this point, facebookid should be on a cookie?
     useEffect(() => {
         const fetchUserInfo = async function () {
             try {
@@ -42,10 +39,27 @@ const App: React.FC = () => {
                     }
                 });
                 const responseData = await response.json();
-                // set user info type
-                setUserInfo(responseData.userprofile);
+                setUserProfile({
+                    displayname: responseData.userprofile.display_name,
+                    birthday:
+                        responseData.userprofile.birthday === undefined
+                            ? ""
+                            : responseData.userprofile.birthday,
+                    gender:
+                        responseData.userprofile.gender === undefined
+                            ? "Empty"
+                            : responseData.userprofile.gender,
+                    country:
+                        responseData.userprofile.country === undefined
+                            ? ""
+                            : responseData.userprofile.country
+                });
                 localStorage.setItem("displayname", responseData.userprofile.display_name);
                 localStorage.setItem("profilepic", responseData.userprofile.profile_pic);
+                setdisplayname(responseData.userprofile.display_name);
+                setprofilepic(responseData.userprofile.profile_pic);
+                setProfileFetched(true);
+                console.log(responseData.userprofile);
             } catch (err) {
                 console.log(err);
             }
@@ -64,6 +78,9 @@ const App: React.FC = () => {
         }
     }, []);
 
+    const updateProfileImg = function (filepath: string): void {
+        setprofilepic(filepath);
+    };
     // token and facebookid should be accessible here as a starting point
     // need to move check for login here and then that should be possible
     // maybe I should fetch userinfo here too and just send it to every component ?
@@ -81,32 +98,46 @@ const App: React.FC = () => {
             </div>
         );
     } else {
-        return (
-            <div id="content" className="w-1/2 mx-auto bg-stone-50">
-                <Header apiurl={apiURL} />
-                <Routes>
-                    <Route
-                        path="/"
-                        element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
-                    />
-                    <Route path="/friends" element={<FriendsList apiurl={apiURL} />} />
-                    <Route
-                        path="/user/:postAuthorID/post/:postID"
-                        element={<SinglePost apiurl={apiURL} />}
-                    />
-                    <Route path="/profile" element={<Profile apirul={apiURL} />} />
-                    <Route
-                        path="/user/:userfacebookid"
-                        element={<FriendProfile apiurl={apiURL} />}
-                    />
+        if (profileFetched) {
+            return (
+                <div id="content" className="w-1/2 mx-auto bg-stone-50">
+                    <Header apiurl={apiURL} profilepic={profilepic} />
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
+                        />
+                        <Route path="/friends" element={<FriendsList apiurl={apiURL} />} />
+                        <Route
+                            path="/user/:postAuthorID/post/:postID"
+                            element={<SinglePost apiurl={apiURL} />}
+                        />
+                        <Route path="/profile" element={<Profile apirul={apiURL} />} />
+                        <Route
+                            path="/editprofile"
+                            element={
+                                <EditProfile
+                                    apiurl={apiURL}
+                                    updateProfileImg={updateProfileImg}
+                                    currentprofile={userProfile}
+                                />
+                            }
+                        />
+                        <Route
+                            path="/user/:userfacebookid"
+                            element={<FriendProfile apiurl={apiURL} />}
+                        />
 
-                    <Route
-                        path="/user/:userfacebookid/friends"
-                        element={<FriendsFriendsList apiurl={apiURL} />}
-                    />
-                </Routes>
-            </div>
-        );
+                        <Route
+                            path="/user/:userfacebookid/friends"
+                            element={<FriendsFriendsList apiurl={apiURL} />}
+                        />
+                    </Routes>
+                </div>
+            );
+        } else {
+            return <div>fetching</div>;
+        }
     }
 };
 
