@@ -1,10 +1,16 @@
+interface Country {
+    _id: string;
+    country: string;
+}
+
 export interface UserProfile {
     facebook_id: string;
     display_name: string;
     profile_pic: string;
     birthday: string;
+    date_birthday: string;
     gender: string;
-    country: string;
+    country: Country;
     date_joined: string;
     friends: string[];
     requests_sent: string[];

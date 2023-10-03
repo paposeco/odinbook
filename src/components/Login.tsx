@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 
-export default function Login({ apiurl }) {
+export default function Login({apiurl}) {
     const [pwd, setpwd] = useState("");
     const navigate = useNavigate();
     /* const [token, setToken] = useState("");
      *  const [tokenFetched, setTokenFetched] = useState(false);
      *  const [facebookID, setFacebookID] = useState(""); */
-    const handleSubmit = async function(event) {
+    const handleSubmit = async function (event) {
         event.preventDefault();
         try {
             const response = await fetch("http://localhost:3000/guestlogin", {
@@ -15,7 +15,7 @@ export default function Login({ apiurl }) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ username: "guest", password: pwd })
+                body: JSON.stringify({username: "guest", password: pwd})
             });
 
             const responseData = await response.json();
@@ -29,7 +29,7 @@ export default function Login({ apiurl }) {
         }
     };
 
-    const handleChange = function(event) {
+    const handleChange = function (event) {
         setpwd(event.currentTarget.value);
     };
     return (

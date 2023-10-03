@@ -34,7 +34,14 @@ const FriendsFriendsList: React.FC<FuncProps> = (props) => {
                 const componentsArray = [];
                 responseData.friends.map((afriend) => {
                     componentsArray.push(
-                        <FriendThumbnail friend={afriend} key={afriend._id} apiurl={apiUrl} />
+                        <FriendThumbnail
+                            friend={afriend}
+                            key={afriend._id}
+                            apiurl={apiUrl}
+                            requestreceived={false}
+                            sendrequest={false}
+                            requestsent={false}
+                        />
                     );
                 });
                 setFriendsThumbnailComponents(componentsArray);

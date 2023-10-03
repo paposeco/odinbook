@@ -95,8 +95,9 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                 Authorization: `Bearer ${token}`
             }
         });
-        const responseData = await response.json();
-        setFriendStatus(true);
+        if (response.status === 201) {
+            setFriendStatus(true);
+        }
     };
 
     if (infoFetched && statusChecked) {

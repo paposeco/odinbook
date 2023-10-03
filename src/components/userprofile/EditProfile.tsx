@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useEffect} from "react";
 import {useNavigate} from "react-router";
 import {useForm} from "react-hook-form";
 import EditProfilePic from "./EditProfilePic";
 import type {EditableProfile} from "src/common/types";
+import {Country, getCountryName} from "./CountrySelector";
 
 interface FuncProps {
     apiurl: string;
@@ -43,16 +44,13 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                 })
             });
             const responseData = await response.json();
-            console.log(responseData);
-            // if (response.status === 201) {
-            //     navigate("/profile");
-            // }
+            if (response.status === 201) {
+                navigate("/profile");
+            }
         } catch (err) {
             console.log(err);
         }
     };
-
-    // });
 
     return (
         <div>
@@ -97,7 +95,13 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                     </div>
                     <div>
                         <label htmlFor="country">Country:</label>
-                        <input type="text" name="country" {...register("country")} />
+                        <select name="country" {...register("country")}>
+                            {Country.map((acountry) => (
+                                <option value={acountry.value} key={acountry.value}>
+                                    {acountry.text}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <input type="submit" value="Save" />
                 </form>

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import {Link} from "react-router-dom";
 import type {Author} from "src/common/types";
 import FriendThumbnail from "components/friends/FriendThumbnail";
 
@@ -29,7 +30,14 @@ const FriendsList: React.FC<FuncProps> = (props) => {
                 const componentsArray = [];
                 responseData.friends.map((afriend) => {
                     componentsArray.push(
-                        <FriendThumbnail friend={afriend} key={afriend._id} apiurl={apiUrl} />
+                        <FriendThumbnail
+                            friend={afriend}
+                            key={afriend._id}
+                            apiurl={apiUrl}
+                            requestreceived={false}
+                            sendrequest={false}
+                            requestsent={false}
+                        />
                     );
                 });
                 setFriendsThumbnailComponents(componentsArray);
@@ -46,6 +54,8 @@ const FriendsList: React.FC<FuncProps> = (props) => {
     return (
         <div className="w-2/3 mx-auto">
             <h2 className="text-xl">Friends</h2>
+            <Link to="/friendrequestssent">Friend Requests Sent</Link>
+            <Link to="/findusers">Find more users</Link>
             <ul>{friendsThumbnailComponents}</ul>
         </div>
     );

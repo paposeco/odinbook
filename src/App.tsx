@@ -6,11 +6,14 @@ import Loggedin from "components/Loggedin";
 import SinglePost from "components/content/SinglePost";
 import Header from "components/Header";
 import FriendsList from "components/friends/FriendsList";
+import FriendRequests from "components/friends/FriendRequests";
+import FriendRequestsSent from "components/friends/FriendRequestsSent";
 import FriendsFriendsList from "components/friends/FriendsFriendsList";
 import FriendProfile from "components/friends/FriendProfile";
+import FindUsers from "components/otherusers/FindUsers";
 import Profile from "components/userprofile/Profile";
 import EditProfile from "components/userprofile/EditProfile";
-import type {EditableProfile} from "./common/types";
+import type {EditableProfile, Friend} from "./common/types";
 
 const App: React.FC = () => {
     const [token, setToken] = useState(localStorage.getItem("token"));
@@ -19,7 +22,8 @@ const App: React.FC = () => {
     const [profilepic, setprofilepic] = useState("");
     const [userProfile, setUserProfile] = useState<EditableProfile>();
     const [profileFetched, setProfileFetched] = useState(false);
-
+    const [requestsReceived, setRequestReceived] = useState<Friend[]>([]);
+    const [requestsSent, setRequestSent] = useState<Friend[]>([]);
     const apiURL = "http://localhost:3000/";
     const authBearerToken = function (childtoken: string, childfacebookdid: string): void {
         if (token === "") {
@@ -54,12 +58,17 @@ const App: React.FC = () => {
                             ? ""
                             : responseData.userprofile.country
                 });
+                if (responseData.userprofile.requests_received.length > 0) {
+                    setRequestReceived(responseData.userprofile.requests_received);
+                }
+                if (responseData.userprofile.requests_sent.length > 0) {
+                    setRequestSent(responseData.userprofile.requests_sent);
+                }
                 localStorage.setItem("displayname", responseData.userprofile.display_name);
                 localStorage.setItem("profilepic", responseData.userprofile.profile_pic);
                 setdisplayname(responseData.userprofile.display_name);
                 setprofilepic(responseData.userprofile.profile_pic);
                 setProfileFetched(true);
-                console.log(responseData.userprofile);
             } catch (err) {
                 console.log(err);
             }
@@ -132,6 +141,17 @@ const App: React.FC = () => {
                             path="/user/:userfacebookid/friends"
                             element={<FriendsFriendsList apiurl={apiURL} />}
                         />
+                        <Route
+                            path="/friendrequests"
+                            element={<FriendRequests requests={requestsReceived} apiurl={apiURL} />}
+                        />
+                        <Route
+                            path="/friendrequestssent"
+                            element={
+                                <FriendRequestsSent requestssent={requestsSent} apiurl={apiURL} />
+                            }
+                        />
+                        <Route path="/findusers" element={<FindUsers apiurl={apiURL} />} />
                     </Routes>
                 </div>
             );

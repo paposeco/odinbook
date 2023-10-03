@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import type {UserProfile, Post} from "src/common/types";
 import PostComponent from "components/content/Post";
 import WhatsOnYourMind from "components/content/WhatsOnYourMind";
+import {getCountryName} from "./CountrySelector";
 
 interface FuncProps {
     apirul: string;
@@ -15,6 +16,7 @@ const Profile: React.FC<FuncProps> = (props) => {
     const [infoFetched, setInfoFetched] = useState(false);
     const profilePic = apiUrl + localStorage.getItem("profile_pic");
     const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
+    const [countryDisplayName, setCountryDisplayName] = useState("");
 
     useEffect(() => {
         const fetchInfo = async function () {
@@ -28,6 +30,12 @@ const Profile: React.FC<FuncProps> = (props) => {
                 });
                 const responseData = await response.json();
                 setUserInfo(responseData.user);
+                if (responseData.user.country !== undefined) {
+                    const countryvalue = responseData.user.country.country;
+                    const countryName = getCountryName(countryvalue);
+                    setCountryDisplayName(countryName);
+                }
+
                 if (responseData.userposts !== undefined) {
                     const postsArray = responseData.userposts.map((apost: Post) => (
                         <PostComponent
@@ -57,10 +65,14 @@ const Profile: React.FC<FuncProps> = (props) => {
                 <div className="flex flex-row">
                     <img src={apiUrl + userInfo.profile_pic} alt="profilepic" className="w-48" />
                     <div>
-                        {userInfo.birthday && userInfo.birthday !== "Invalid DateTime" ? (
-                            <p>{userInfo.birthday}</p>
+                        {userInfo.birthday !== undefined &&
+                        userInfo.birthday !== "Invalid DateTime" ? (
+                            <p>{userInfo.date_birthday}</p>
                         ) : null}
-                        {userInfo.country ? <p>{userInfo.country}</p> : null}
+                        {userInfo.gender !== undefined && userInfo.gender !== "" ? (
+                            <p>{userInfo.gender}</p>
+                        ) : null}
+                        {userInfo.country !== undefined ? <p>{countryDisplayName}</p> : null}
                         {userInfo.friends === undefined || userInfo.friends.length === 0 ? (
                             <p>No friends</p>
                         ) : (
