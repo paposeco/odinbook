@@ -10,11 +10,12 @@ const FindUsers: React.FC<FuncProps> = function (props) {
     const facebookid = localStorage.getItem("facebookid");
     const token = localStorage.getItem("token");
     const [usersFetched, setUsersFetched] = useState(false);
-    const [usersThumbnailComponents, setUsersThumbnailComponents] = useState<JSX.Element[]>();
+    const [usersThumbnailComponents, setUsersThumbnailComponents] = useState<JSX.Element[]>([]);
+    const [fetchMore, setFetchMore] = useState(0);
 
     useEffect(() => {
         const fetchUsers = async function () {
-            const response = await fetch(apiUrl + facebookid + "/users", {
+            const response = await fetch(apiUrl + facebookid + "/users/" + fetchMore, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -22,7 +23,9 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                 }
             });
             const responseData = await response.json();
-            const componentsArray = [];
+            const componentsArray = [...usersThumbnailComponents];
+            console.log("before");
+            console.log(componentsArray);
             responseData.allUsersNotFriends.map((afriend) => {
                 const requestexists = responseData.currentUser.requests_sent.find(
                     (element) => element.facebook_id === afriend.facebook_id
@@ -42,27 +45,39 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                     />
                 );
             });
+            console.log("after");
+            console.log(componentsArray);
             setUsersThumbnailComponents(componentsArray);
         };
         if (!usersFetched) {
             fetchUsers();
             setUsersFetched(true);
         }
-    }, []);
+    }, [fetchMore]);
+
+    const handleClick = function (event: React.MouseEvent) {
+        setFetchMore(fetchMore + 1);
+        setUsersFetched(false);
+    };
     if (usersFetched) {
         return (
             <div className="w-2/3 mx-auto">
                 <h2 className="text-xl">Odinbook users</h2>
                 {usersThumbnailComponents !== undefined && usersThumbnailComponents.length > 0 ? (
-                    <ul>{usersThumbnailComponents}</ul>
+                    <div>
+                        <ul>{usersThumbnailComponents}</ul>
+                        <button onClick={handleClick}>More</button>
+                    </div>
                 ) : (
                     <p>You are friends with everyone on Odinbook.</p>
                 )}
             </div>
         );
-    } else {
+    } else if (!usersFetched && fetchMore === 0) {
         return <p>fetching</p>;
     }
 };
 
 export default FindUsers;
+
+// react-scroll

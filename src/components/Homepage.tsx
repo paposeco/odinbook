@@ -85,3 +85,5 @@ const Homepage: React.FC<FuncProps> = (props) => {
 };
 
 export default Homepage;
+
+// add skip to timeline
