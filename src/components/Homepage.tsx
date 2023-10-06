@@ -18,31 +18,48 @@ const Homepage: React.FC<FuncProps> = (props) => {
     const token = localStorage.getItem("token");
     const facebookID = localStorage.getItem("facebookid");
     const profilePic = apiUrl + localStorage.getItem("profile_pic");
-    const [timelineCounter, setTimelineCounter] = useState(0);
     const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
     const [newPost, setNewPost] = useState(false);
+    const [postsFetched, setPostsFetched] = useState(false);
+    const [fetchedMore, setFetchedMore] = useState(false);
+    const [endTimeline, setEndTimeline] = useState(false);
+    const [fetchCounter, setFetchCounter] = useState(0);
 
     useEffect(() => {
         const fetchTimeline = async function () {
             try {
-                const response = await fetch(apiUrl + facebookID + "/posts/timeline", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
+                const response = await fetch(
+                    apiUrl + facebookID + "/posts/timeline/" + fetchCounter,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`
+                        }
                     }
-                });
+                );
                 const responseData = await response.json();
-                const postsArray = responseData.timelinePosts.map((apost: Post) => (
-                    <PostComponent
-                        postinfo={apost}
-                        key={apost.id}
-                        apiurl={apiUrl}
-                        facebookid={facebookID}
-                        userprofileimg={profilePic}
-                    />
-                ));
-                setPostsToDisplay(postsArray);
+                const componentsArray = [...postsToDisplay];
+                responseData.timelinePosts.map((apost: Post) => {
+                    componentsArray.push(
+                        <PostComponent
+                            postinfo={apost}
+                            key={apost.id}
+                            apiurl={apiUrl}
+                            facebookid={facebookID}
+                            userprofileimg={profilePic}
+                        />
+                    );
+                });
+                if (fetchCounter === 0) {
+                    setFetchCounter(1);
+                }
+                console.log(responseData.timelinePosts.length);
+                if (responseData.timelinePosts.length < 3) {
+                    setEndTimeline(true);
+                }
+                setPostsToDisplay(componentsArray);
+                setPostsFetched(true);
             } catch (err) {
                 console.log(err);
             }
@@ -51,14 +68,37 @@ const Homepage: React.FC<FuncProps> = (props) => {
             setNewPost(false);
             fetchTimeline();
         }
-        if (token !== "" && facebookID !== "" && profilePic !== "") {
+        if (!postsFetched) {
+            console.log(fetchCounter);
+
+            if (fetchedMore) {
+                setFetchCounter(fetchCounter + 1);
+            }
             fetchTimeline();
         }
-    }, [token, facebookID, profilePic, newPost]);
+    }, [postsFetched, newPost]);
 
     const newPostCreated = function () {
         setNewPost(true);
     };
+
+    useEffect(() => {
+        const handleScroll = function () {
+            setFetchedMore((fetchedMore) => {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                    setPostsFetched(false);
+                    return true;
+                }
+                return false;
+            });
+        };
+        if (!endTimeline) {
+            window.addEventListener("scroll", handleScroll);
+            return () => {
+                window.removeEventListener("scroll", handleScroll);
+            };
+        }
+    }, []);
 
     // header, notificacoes e logout
     if (token === "") {
@@ -68,10 +108,10 @@ const Homepage: React.FC<FuncProps> = (props) => {
                 <Link to="/login">Login</Link>
             </div>
         );
-    } else if (profilePic === "") {
+    } else if (!postsFetched && fetchCounter === 0) {
         return (
             <div>
-                <p>loading</p>
+                <p>fetching</p>
             </div>
         );
     } else {
