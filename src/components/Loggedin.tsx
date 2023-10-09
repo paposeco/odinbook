@@ -12,13 +12,15 @@ const Loggedin: React.FC<FuncProps> = (props) => {
     useEffect(() => {
         if (document.cookie !== "" && !tokenFetched) {
             setTokenFetched(true);
+
             const fullCookie = document.cookie;
-            const semiColon = document.cookie.indexOf(";");
-            const cleanTokenCookie = fullCookie.slice(6, semiColon);
-            const cleanFacebookIdCookie = fullCookie.slice(semiColon + 13, fullCookie.length);
-            props.updateToken(cleanTokenCookie, cleanFacebookIdCookie);
-            localStorage.setItem("token", cleanTokenCookie);
-            localStorage.setItem("facebookid", cleanFacebookIdCookie);
+            const indexToken = fullCookie.indexOf("token");
+            const indexFacebook = fullCookie.indexOf("facebook");
+            const token = fullCookie.slice(indexToken + 6, indexFacebook - 2);
+            const facebookid = fullCookie.slice(indexFacebook + 11);
+            props.updateToken(token, facebookid);
+            localStorage.setItem("token", token);
+            localStorage.setItem("facebookid", facebookid);
             navigate("/");
         }
     }, []);

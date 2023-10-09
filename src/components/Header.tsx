@@ -30,6 +30,9 @@ const Header: React.FC<FuncProps> = (props) => {
                     <h3>Profile</h3>
                 </Link>
                 <Link to="/friendrequests">Notifications</Link>
+                <Link to="/logout">
+                    <h3>Logout</h3>
+                </Link>
             </div>
             <div className="flex flex-row gap-4">
                 <img

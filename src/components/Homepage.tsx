@@ -54,7 +54,6 @@ const Homepage: React.FC<FuncProps> = (props) => {
                 if (fetchCounter === 0) {
                     setFetchCounter(1);
                 }
-                console.log(responseData.timelinePosts.length);
                 if (responseData.timelinePosts.length < 3) {
                     setEndTimeline(true);
                 }
@@ -69,8 +68,6 @@ const Homepage: React.FC<FuncProps> = (props) => {
             fetchTimeline();
         }
         if (!postsFetched) {
-            console.log(fetchCounter);
-
             if (fetchedMore) {
                 setFetchCounter(fetchCounter + 1);
             }
@@ -85,7 +82,10 @@ const Homepage: React.FC<FuncProps> = (props) => {
     useEffect(() => {
         const handleScroll = function () {
             setFetchedMore((fetchedMore) => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                if (
+                    window.innerHeight + window.scrollY >=
+                    document.body.offsetHeight - 0.1 * document.body.offsetHeight
+                ) {
                     setPostsFetched(false);
                     return true;
                 }

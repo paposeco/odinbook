@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 
-export default function Login({apiurl}) {
+interface FuncProps {
+    authbearertoken(arg1: string, arg2: string): void;
+    apiurl: string;
+}
+
+const Login: React.FC<FuncProps> = function (props) {
     const [pwd, setpwd] = useState("");
     const navigate = useNavigate();
-    /* const [token, setToken] = useState("");
-     *  const [tokenFetched, setTokenFetched] = useState(false);
-     *  const [facebookID, setFacebookID] = useState(""); */
     const handleSubmit = async function (event) {
         event.preventDefault();
         try {
@@ -21,8 +23,8 @@ export default function Login({apiurl}) {
             const responseData = await response.json();
             localStorage.setItem("token", responseData.token);
             localStorage.setItem("facebookid", responseData.facebookid);
-            document.cookie = "token=" + responseData.token;
-            document.cookie = "facebookid=" + responseData.facebookid;
+            console.log("navigate");
+            props.authbearertoken(responseData.token, responseData.facebookid);
             navigate("/");
         } catch (err) {
             console.log(err);
@@ -34,7 +36,7 @@ export default function Login({apiurl}) {
     };
     return (
         <div>
-            <Link to={apiurl + "api/auth/facebook"}>Login with Facebook</Link>
+            <Link to={props.apiurl + "api/auth/facebook"}>Login with Facebook</Link>
             <p>Guest Login</p>
             <form action="" method="" onSubmit={handleSubmit}>
                 <input disabled type="text" value="Guest" />
@@ -43,4 +45,6 @@ export default function Login({apiurl}) {
             </form>
         </div>
     );
-}
+};
+
+export default Login;

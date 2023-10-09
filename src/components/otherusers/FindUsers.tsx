@@ -66,7 +66,10 @@ const FindUsers: React.FC<FuncProps> = function (props) {
     useEffect(() => {
         const handleScroll = function () {
             setFetchedMore((fetchedMore) => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                if (
+                    window.innerHeight + window.scrollY >=
+                    document.body.offsetHeight - 0.1 * document.body.offsetHeight
+                ) {
                     setUsersFetched(false);
                     return true;
                 }
@@ -100,5 +103,3 @@ const FindUsers: React.FC<FuncProps> = function (props) {
 };
 
 export default FindUsers;
-
-// react-scroll

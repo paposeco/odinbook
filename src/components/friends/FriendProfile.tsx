@@ -3,6 +3,7 @@ import {useParams} from "react-router";
 import {Link} from "react-router-dom";
 import type {Friend, Post} from "src/common/types";
 import PostComponent from "components/content/Post";
+import RemoveFriend from "./removefriend";
 
 interface FuncProps {
     apiurl: string;
@@ -17,6 +18,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     const apiUrl = props.apiurl;
     const profilePic = apiUrl + localStorage.getItem("profile_pic");
     const [postsToDisplay, setPostsToDisplay] = useState<JSX.Element[]>([]);
+    const [showRemoveFriendComp, setShowRemoveFriendComp] = useState(false);
     const [statusChecked, setStatusChecked] = useState(false);
     const [friendStatus, setFriendStatus] = useState(false);
     const [friendRequestSent, setFriendRequestSent] = useState(false);
@@ -100,11 +102,28 @@ const UserProfile: React.FC<FuncProps> = (props) => {
         }
     };
 
+    const removeFriend = function (event: React.MouseEvent) {
+        setShowRemoveFriendComp(true);
+    };
+
+    const cancelRemoveFriend = function (event: React.MouseEvent) {
+        setShowRemoveFriendComp(false);
+    };
+
     if (infoFetched && statusChecked) {
         return (
             <div>
                 <h2 className="text-lg">{userInfo.display_name}</h2>
                 {friendStatus ? <p>You are friends</p> : null}
+                {friendStatus ? <button onClick={removeFriend}>Remove friend</button> : null}
+                {showRemoveFriendComp ? (
+                    <RemoveFriend
+                        apiurl={apiUrl}
+                        friendfacebookid={userfacebookid}
+                        friendname={userInfo.display_name}
+                        cancelremovefriend={cancelRemoveFriend}
+                    />
+                ) : null}
                 {!friendStatus && friendRequestSent ? <p>Friend request sent</p> : null}
                 {!friendStatus && !friendRequestSent ? (
                     <button onClick={handleClick}>Add Friend</button>

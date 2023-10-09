@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {Routes, Route} from "react-router-dom";
 import Login from "components/Login";
+import Logout from "components/Logout";
 import Homepage from "components/Homepage";
 import Loggedin from "components/Loggedin";
 import SinglePost from "components/content/SinglePost";
@@ -58,6 +59,7 @@ const App: React.FC = () => {
                             ? ""
                             : responseData.userprofile.country
                 });
+
                 if (responseData.userprofile.requests_received.length > 0) {
                     setRequestReceived(responseData.userprofile.requests_received);
                 }
@@ -73,10 +75,10 @@ const App: React.FC = () => {
                 console.log(err);
             }
         };
-        if (token !== "") {
+        if (token !== "" && facebookID !== null) {
             fetchUserInfo();
         }
-    }, [token]);
+    }, [token, facebookID]);
 
     useEffect(() => {
         const tokenexists = localStorage.getItem("token");
@@ -90,18 +92,18 @@ const App: React.FC = () => {
     const updateProfileImg = function (filepath: string): void {
         setprofilepic(filepath);
     };
-    // token and facebookid should be accessible here as a starting point
-    // need to move check for login here and then that should be possible
-    // maybe I should fetch userinfo here too and just send it to every component ?
-    // maybe I could have a separate component that handles the response from logging in facebook
 
-    // facebookid and token are accessible here now
-
+    const userLoggedOut = function () {
+        setToken("");
+    };
     if (token === "") {
         return (
             <div id="content" className="w-1/2 mx-auto ">
                 <Routes>
-                    <Route path="/" element={<Login apiurl={apiURL} />} />
+                    <Route
+                        path="/"
+                        element={<Login apiurl={apiURL} authbearertoken={authBearerToken} />}
+                    />
                     <Route path="/loggedin" element={<Loggedin updateToken={authBearerToken} />} />
                 </Routes>
             </div>
@@ -152,6 +154,7 @@ const App: React.FC = () => {
                             }
                         />
                         <Route path="/findusers" element={<FindUsers apiurl={apiURL} />} />
+                        <Route path="/logout" element={<Logout userloggedout={userLoggedOut} />} />
                     </Routes>
                 </div>
             );
