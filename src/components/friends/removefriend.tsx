@@ -1,21 +1,22 @@
-import React, {useState} from "react";
+import React from "react";
 import {useNavigate} from "react-router";
 
 interface FuncProps {
     apiurl: string;
+    facebookid: string;
     friendfacebookid: string;
     friendname: string;
     cancelremovefriend(arg1: React.MouseEvent): void;
+    friendremoved(): void;
 }
 
 const RemoveFriend: React.FC<FuncProps> = function (props) {
-    const [facebookid, setfacebookid] = localStorage.getItem("facebookid");
-    const [token, settoken] = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     const navigate = useNavigate();
     const handleClick = async function (event: React.MouseEvent) {
         try {
             const response = await fetch(
-                props.apiurl + facebookid + "/removefriend/" + props.friendfacebookid,
+                props.apiurl + "removefriend/" + props.facebookid + "/" + props.friendfacebookid,
                 {
                     method: "POST",
                     headers: {
@@ -24,14 +25,15 @@ const RemoveFriend: React.FC<FuncProps> = function (props) {
                     }
                 }
             );
+            const responseData = await response.json();
             if (response.status === 201) {
-                // success
-                navigate("/friends");
+                props.friendremoved();
             }
         } catch (err) {
             console.log(err);
         }
     };
+
     return (
         <div>
             <p>Do you want to remove {props.friendname} from your list of friends?</p>

@@ -90,6 +90,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
     };
 
     useEffect(() => {
+        console.log(props.postinfo);
         if (postInfo !== undefined && postInfo.post_image !== undefined) {
             if (postInfo.post_image.includes("images") && postInfo.post_image !== "") {
                 setImgSrc(apiUrl + postInfo.post_image);
