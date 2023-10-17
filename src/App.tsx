@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {Routes, Route} from "react-router-dom";
 import Login from "components/Login";
 import Logout from "components/Logout";
 import Homepage from "components/Homepage";
@@ -12,9 +12,10 @@ import FriendRequestsSent from "components/friends/FriendRequestsSent";
 import FriendsFriendsList from "components/friends/FriendsFriendsList";
 import FriendProfile from "components/friends/FriendProfile";
 import FindUsers from "components/otherusers/FindUsers";
+import FindUsersNearYour from "components/otherusers/FindUsersNearYou";
 import Profile from "components/userprofile/Profile";
 import EditProfile from "components/userprofile/EditProfile";
-import type { EditableProfile, Friend } from "./common/types";
+import type {EditableProfile, Friend} from "./common/types";
 
 const App: React.FC = () => {
     const [token, setToken] = useState(localStorage.getItem("token"));
@@ -25,8 +26,9 @@ const App: React.FC = () => {
     const [profileFetched, setProfileFetched] = useState(false);
     const [requestsReceived, setRequestReceived] = useState<Friend[]>([]);
     const [requestsSent, setRequestSent] = useState<Friend[]>([]);
+    const [userCountry, setUserCountry] = useState("");
     const apiURL = "http://localhost:3000/";
-    const authBearerToken = function(childtoken: string, childfacebookdid: string): void {
+    const authBearerToken = function (childtoken: string, childfacebookdid: string): void {
         if (token === "") {
             setToken(childtoken);
             setFacebookID(childfacebookdid);
@@ -38,7 +40,7 @@ const App: React.FC = () => {
     //birthday
 
     useEffect(() => {
-        const fetchUserInfo = async function() {
+        const fetchUserInfo = async function () {
             try {
                 const response = await fetch(apiURL + facebookID + "/headerinfo", {
                     method: "GET",
@@ -63,7 +65,11 @@ const App: React.FC = () => {
                             ? ""
                             : responseData.userprofile.country
                 });
-
+                setUserCountry(
+                    responseData.userprofile.country === undefined
+                        ? ""
+                        : responseData.userprofile.country
+                );
                 if (responseData.userprofile.requests_received.length > 0) {
                     setRequestReceived(responseData.userprofile.requests_received);
                 }
@@ -93,13 +99,38 @@ const App: React.FC = () => {
         }
     }, []);
 
-    const updateProfileImg = function(filepath: string): void {
+    const updateProfileImg = function (filepath: string): void {
         setprofilepic(filepath);
     };
 
-    const userLoggedOut = function() {
+    const userLoggedOut = function () {
         setToken("");
     };
+
+    const requestSent = function () {
+        const fetchRequestSent = async function () {
+            try {
+                const response = await fetch(apiURL + facebookID + "/headerinfo", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const responseData = await response.json();
+                setRequestSent(responseData.userprofile.requests_sent);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchRequestSent();
+    };
+
+    const updateCountry = function (countryvalue: string) {
+        setUserCountry(countryvalue);
+    };
+
+    // function to update country on editprofile
     if (token === "") {
         return (
             <div id="content" className="w-1/2 mx-auto ">
@@ -115,14 +146,19 @@ const App: React.FC = () => {
     } else {
         if (profileFetched) {
             return (
-                <div id="content" className="w-1/2 mx-auto bg-stone-50">
+                <div id="content" className="w-2/3 mx-auto bg-stone-50">
                     <Header apiurl={apiURL} profilepic={profilepic} />
                     <Routes>
                         <Route
                             path="/"
                             element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
                         />
-                        <Route path="/friends" element={<FriendsList apiurl={apiURL} />} />
+                        <Route
+                            path="/friends"
+                            element={
+                                <FriendsList apiurl={apiURL} updaterequestsent={requestSent} />
+                            }
+                        />
                         <Route
                             path="/user/:postAuthorID/post/:postID"
                             element={<SinglePost apiurl={apiURL} />}
@@ -135,6 +171,7 @@ const App: React.FC = () => {
                                     apiurl={apiURL}
                                     updateProfileImg={updateProfileImg}
                                     currentprofile={userProfile}
+                                    updateCountry={updateCountry}
                                 />
                             }
                         />
@@ -145,19 +182,47 @@ const App: React.FC = () => {
 
                         <Route
                             path="/user/:userfacebookid/friends"
-                            element={<FriendsFriendsList apiurl={apiURL} />}
+                            element={
+                                <FriendsFriendsList
+                                    apiurl={apiURL}
+                                    updaterequestsent={requestSent}
+                                />
+                            }
                         />
                         <Route
                             path="/friendrequests"
-                            element={<FriendRequests requests={requestsReceived} apiurl={apiURL} />}
+                            element={
+                                <FriendRequests
+                                    requests={requestsReceived}
+                                    apiurl={apiURL}
+                                    updaterequestsent={requestSent}
+                                />
+                            }
                         />
                         <Route
                             path="/friendrequestssent"
                             element={
-                                <FriendRequestsSent requestssent={requestsSent} apiurl={apiURL} />
+                                <FriendRequestsSent
+                                    requestssent={requestsSent}
+                                    apiurl={apiURL}
+                                    updaterequestsent={requestSent}
+                                />
                             }
                         />
-                        <Route path="/findusers" element={<FindUsers apiurl={apiURL} />} />
+                        <Route
+                            path="/findusers"
+                            element={<FindUsers apiurl={apiURL} updaterequestsent={requestSent} />}
+                        />
+                        <Route
+                            path="/usersnearyou"
+                            element={
+                                <FindUsersNearYour
+                                    apiurl={apiURL}
+                                    updaterequestsent={requestSent}
+                                    currusercountry={userCountry}
+                                />
+                            }
+                        />
                         <Route path="/logout" element={<Logout userloggedout={userLoggedOut} />} />
                     </Routes>
                 </div>

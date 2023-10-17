@@ -8,6 +8,7 @@ interface FuncProps {
     requestreceived: boolean;
     sendrequest: boolean;
     requestsent: boolean;
+    updaterequestssent(): void;
 }
 
 const FriendThumbnail: React.FC<FuncProps> = (props) => {
@@ -49,18 +50,19 @@ const FriendThumbnail: React.FC<FuncProps> = (props) => {
                 }
             }
         );
-
+        // function from app to update info
         if (response.status === 201) {
             setDisableButton(true);
             setButtonText("Friend request sent");
             setRequestStatus(true);
+            props.updaterequestssent();
         }
     };
 
     return (
         <li
             key={props.friend.facebook_id}
-            className="flex flex-col gap-4 justify-center w-48 bg-stone-100 rounded-lg p-8 m-8"
+            className="flex flex-col gap-4 justify-center w-72 bg-stone-100 rounded-lg p-8 m-8 "
         >
             <Link to={userurl} className="text-center text-sm no-underline text-gray-700 font-bold">
                 {props.friend.display_name}
@@ -69,7 +71,7 @@ const FriendThumbnail: React.FC<FuncProps> = (props) => {
                 <img
                     src={props.apiurl + props.friend.profile_pic}
                     alt="profilepic"
-                    className="rounded-full"
+                    className="rounded-full aspect-square w-48 h-48 object-cover mx-auto"
                 />
             </Link>
             {props.requestreceived ? (

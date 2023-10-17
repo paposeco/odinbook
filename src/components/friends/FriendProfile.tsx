@@ -27,10 +27,6 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     const [countryDisplayName, setCountryDisplayName] = useState("");
     const [userFriends, setUserFriends] = useState("");
 
-    const [fetchedMore, setFetchedMore] = useState(false);
-    const [endTimeline, setEndTimeline] = useState(false);
-    const [fetchCounter, setFetchCounter] = useState(0);
-
     useEffect(() => {
         const checkFriendStatus = async function () {
             try {
@@ -61,13 +57,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     }, []);
     useEffect(() => {
         const fetchUserInfo = async function () {
-            const fetchurl =
-                props.apiurl +
-                facebookid +
-                "/otheruserprofile/" +
-                userfacebookid +
-                "/" +
-                fetchCounter;
+            const fetchurl = props.apiurl + facebookid + "/otheruserprofile/" + userfacebookid;
             try {
                 const response = await fetch(fetchurl, {
                     method: "GET",
@@ -84,12 +74,6 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                     const countryvalue = responseData.country;
                     const countryName = getCountryName(countryvalue);
                     setCountryDisplayName(countryName);
-                }
-                if (fetchCounter === 0) {
-                    setFetchCounter(1);
-                }
-                if (responseData.posts.length < 3) {
-                    setEndTimeline(true);
                 }
 
                 if (responseData.posts !== undefined && responseData.posts.length > 0) {
@@ -115,31 +99,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
         };
 
         if (!infoFetched) {
-            if (fetchedMore) {
-                setFetchCounter(fetchCounter + 1);
-            }
             fetchUserInfo();
-        }
-    }, []);
-
-    useEffect(() => {
-        const handleScroll = function () {
-            setFetchedMore((fetchedMore) => {
-                if (
-                    window.innerHeight + window.scrollY >=
-                    document.body.offsetHeight - 0.1 * document.body.offsetHeight
-                ) {
-                    setInfoFetched(false);
-                    return true;
-                }
-                return false;
-            });
-        };
-        if (!endTimeline) {
-            window.addEventListener("scroll", handleScroll);
-            return () => {
-                window.removeEventListener("scroll", handleScroll);
-            };
         }
     }, []);
 
@@ -170,7 +130,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
         navigate("/friends");
     };
 
-    if (!infoFetched && fetchCounter === 0) {
+    if (!infoFetched) {
         return <div>fetching</div>;
     } else if (infoFetched && statusChecked) {
         return (

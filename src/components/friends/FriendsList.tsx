@@ -5,12 +5,13 @@ import FriendThumbnail from "components/friends/FriendThumbnail";
 
 interface FuncProps {
     apiurl: string;
+    updaterequestsent(): void;
 }
 
 const FriendsList: React.FC<FuncProps> = (props) => {
     const [friendsList, setFriendsList] = useState<Author[]>();
     const [friendsFetched, setFriendsFetched] = useState(false);
-    const [friendsThumbnailComponents, setFriendsThumbnailComponents] = useState<JSX.Element[]>();
+    const [friendsThumbnailComponents, setFriendsThumbnailComponents] = useState<JSX.Element[]>([]);
     const apiUrl = props.apiurl;
     const facebookid = localStorage.getItem("facebookid");
     const token = localStorage.getItem("token");
@@ -37,6 +38,7 @@ const FriendsList: React.FC<FuncProps> = (props) => {
                             requestreceived={false}
                             sendrequest={false}
                             requestsent={false}
+                            updaterequestsent={props.updaterequestsent}
                         />
                     );
                 });
@@ -51,14 +53,22 @@ const FriendsList: React.FC<FuncProps> = (props) => {
         }
     }, []);
 
-    return (
-        <div className="w-2/3 mx-auto">
-            <h2 className="text-xl">Friends</h2>
-            <Link to="/friendrequestssent">Friend Requests Sent</Link>
-            <Link to="/findusers">Find more users</Link>
-            <ul>{friendsThumbnailComponents}</ul>
-        </div>
-    );
+    if (friendsFetched) {
+        return (
+            <div className="w-3/4 mx-auto">
+                <h2 className="text-xl">Friends</h2>
+                <Link to="/friendrequestssent">Friend Requests Sent</Link>
+                <Link to="/findusers">Find more users</Link>
+                {friendsThumbnailComponents.length > 0 ? (
+                    <ul>{friendsThumbnailComponents}</ul>
+                ) : (
+                    <p>You don't have any friends yet</p>
+                )}
+            </div>
+        );
+    } else {
+        return <p>fetching</p>;
+    }
 };
 
 export default FriendsList;

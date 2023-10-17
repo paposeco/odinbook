@@ -5,6 +5,7 @@ import FriendThumbnail from "./FriendThumbnail";
 interface FuncProps {
     requestssent: Friend[];
     apiurl: string;
+    updaterequestsent(): void;
 }
 
 const FriendRequestsSent: React.FC<FuncProps> = function (props) {
@@ -20,6 +21,7 @@ const FriendRequestsSent: React.FC<FuncProps> = function (props) {
                     requestreceived={false}
                     sendrequest={false}
                     requestsent={false}
+                    updaterequestsent={props.updaterequestsent}
                 />
             );
         });

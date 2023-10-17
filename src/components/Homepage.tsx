@@ -116,7 +116,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
         );
     } else {
         return (
-            <div className="my-8 w-2/3 mx-auto">
+            <div className="my-8 w-3/4 mx-auto">
                 <WhatsOnYourMind apiurl={apiUrl} newpost={newPostCreated} userprofile={false} />
                 {postsToDisplay.length > 0 ? <ul>{postsToDisplay}</ul> : <p>No posts to display</p>}
             </div>
