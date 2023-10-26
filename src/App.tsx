@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {Routes, Route} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import Login from "components/Login";
 import Logout from "components/Logout";
 import Homepage from "components/Homepage";
@@ -15,7 +15,7 @@ import FindUsers from "components/otherusers/FindUsers";
 import FindUsersNearYour from "components/otherusers/FindUsersNearYou";
 import Profile from "components/userprofile/Profile";
 import EditProfile from "components/userprofile/EditProfile";
-import type {EditableProfile, Friend} from "./common/types";
+import type { EditableProfile, Friend } from "./common/types";
 
 const App: React.FC = () => {
     const [token, setToken] = useState(localStorage.getItem("token"));
@@ -28,19 +28,15 @@ const App: React.FC = () => {
     const [requestsSent, setRequestSent] = useState<Friend[]>([]);
     const [userCountry, setUserCountry] = useState("");
     const apiURL = "http://localhost:3000/";
-    const authBearerToken = function (childtoken: string, childfacebookdid: string): void {
+    const authBearerToken = function(childtoken: string, childfacebookdid: string): void {
         if (token === "") {
             setToken(childtoken);
             setFacebookID(childfacebookdid);
         }
     };
 
-    //country
-    //search
-    //birthday
-
     useEffect(() => {
-        const fetchUserInfo = async function () {
+        const fetchUserInfo = async function() {
             try {
                 const response = await fetch(apiURL + facebookID + "/headerinfo", {
                     method: "GET",
@@ -99,16 +95,16 @@ const App: React.FC = () => {
         }
     }, []);
 
-    const updateProfileImg = function (filepath: string): void {
+    const updateProfileImg = function(filepath: string): void {
         setprofilepic(filepath);
     };
 
-    const userLoggedOut = function () {
+    const userLoggedOut = function() {
         setToken("");
     };
 
-    const requestSent = function () {
-        const fetchRequestSent = async function () {
+    const requestSent = function() {
+        const fetchRequestSent = async function() {
             try {
                 const response = await fetch(apiURL + facebookID + "/headerinfo", {
                     method: "GET",
@@ -126,7 +122,7 @@ const App: React.FC = () => {
         fetchRequestSent();
     };
 
-    const updateCountry = function (countryvalue: string) {
+    const updateCountry = function(countryvalue: string) {
         setUserCountry(countryvalue);
     };
 

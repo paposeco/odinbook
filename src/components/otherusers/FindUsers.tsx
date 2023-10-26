@@ -13,6 +13,9 @@ const FindUsers: React.FC<FuncProps> = function (props) {
     const token = localStorage.getItem("token");
     const [usersFetched, setUsersFetched] = useState(false);
     const [usersThumbnailComponents, setUsersThumbnailComponents] = useState<JSX.Element[]>([]);
+    const [displayUsers, setDisplayUsers] = useState(true);
+    const [searchResults, setSearchResults] = useState<JSX.Element[]>([]);
+    const [displaySearchResults, setDisplaySearchResults] = useState(false);
     const [fetchedMore, setFetchedMore] = useState(false);
     const [endTimeline, setEndTimeline] = useState(false);
     const [fetchCounter, setFetchCounter] = useState(0);
@@ -111,7 +114,38 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                 body: JSON.stringify({searchkeyword: searchcontent})
             });
             const responseData = await response.json();
-            console.log(responseData);
+            if (responseData.usersthatmatch.length > 0) {
+                const users = responseData.usersthatmatch;
+                const currentUser = responseData.currentUser;
+                const componentsArray = [];
+                users.map((user) => {
+                    const requestexists = currentUser.requests_sent.find(
+                        (element) => element.facebook_id === user.facebook_id
+                    );
+                    let requestsent = false;
+                    if (requestexists !== undefined) {
+                        requestsent = true;
+                    }
+                    componentsArray.push(
+                        <FriendThumbnail
+                            friend={user}
+                            key={user._id}
+                            apiurl={apiUrl}
+                            requestreceived={false}
+                            sendrequest={true}
+                            requestsent={requestsent}
+                            updaterequestsent={props.updaterequestsent}
+                        />
+                    );
+                });
+
+                setDisplaySearchResults(true);
+                setDisplayUsers(false);
+                setSearchResults(componentsArray);
+            } else {
+                setDisplaySearchResults(true);
+                setDisplayUsers(false);
+            }
         } catch (err) {
             console.log(err);
         }
@@ -134,19 +168,30 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                                 type="search"
                                 name="searchuser"
                                 id="searchuser"
+                                minLength={2}
                                 onChange={handleChange}
                             />
                             <input type="submit" value="Search" />
                         </form>
                     ) : null}
                 </div>
-                {usersThumbnailComponents !== undefined && usersThumbnailComponents.length > 0 ? (
+                {displayUsers &&
+                usersThumbnailComponents !== undefined &&
+                usersThumbnailComponents.length > 0 ? (
                     <div>
                         <ul className="flex flex-row">{usersThumbnailComponents}</ul>
                     </div>
-                ) : (
+                ) : displayUsers && !displaySearchResults ? (
                     <p>You are friends with everyone in Odinbook.</p>
-                )}
+                ) : null}
+                {displaySearchResults ? (
+                    <div>
+                        <ul className="flex flex-row">{searchResults}</ul>
+                    </div>
+                ) : null}
+                {displaySearchResults && searchResults.length === 0 ? (
+                    <p>Couldn't find any users with that name</p>
+                ) : null}
             </div>
         );
     } else if (!usersFetched && fetchCounter === 0) {
