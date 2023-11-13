@@ -49,7 +49,6 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
                 }
             });
             const responseData = await response.json();
-            console.log(responseData);
             if (responseData.friendsbirthdays.length > 0) {
                 const birthstodayarray = [];
                 responseData.friendsbirthdays.map((friend) => {

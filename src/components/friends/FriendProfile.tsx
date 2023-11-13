@@ -3,8 +3,14 @@ import {useParams, useNavigate} from "react-router";
 import {Link} from "react-router-dom";
 import type {Friend, Post} from "src/common/types";
 import PostComponent from "components/content/Post";
-import RemoveFriend from "./removefriend";
+import RemoveFriend from "./RemoveFriend";
 import {getCountryName} from "components/userprofile/CountrySelector";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCakeCandles} from "@fortawesome/free-solid-svg-icons";
+import {faVenusMars} from "@fortawesome/free-solid-svg-icons";
+import {faGlobe} from "@fortawesome/free-solid-svg-icons";
+import {faUserGroup} from "@fortawesome/free-solid-svg-icons";
+import {faUserXmark} from "@fortawesome/free-solid-svg-icons";
 
 interface FuncProps {
     apiurl: string;
@@ -135,38 +141,67 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     } else if (infoFetched && statusChecked) {
         return (
             <div>
-                <h2 className="text-lg">{userInfo.display_name}</h2>
-                {friendStatus ? <p>You are friends</p> : null}
-                {friendStatus ? <button onClick={removeFriend}>Remove friend</button> : null}
-                {showRemoveFriendComp ? (
-                    <RemoveFriend
-                        apiurl={apiUrl}
-                        facebookid={facebookid}
-                        friendfacebookid={userfacebookid}
-                        friendname={userInfo.display_name}
-                        cancelremovefriend={cancelRemoveFriend}
-                        friendremoved={friendRemoved}
+                <div className="flex flex-row gap-8">
+                    <img
+                        src={apiUrl + userInfo.profile_pic}
+                        alt="profilepic"
+                        className="w-48 rounded-full"
                     />
-                ) : null}
-                {!friendStatus && friendRequestSent ? <p>Friend request sent</p> : null}
-                {!friendStatus && !friendRequestSent ? (
-                    <button onClick={handleClick}>Add Friend</button>
-                ) : null}
-
-                <div className="flex flex-row">
-                    <img src={apiUrl + userInfo.profile_pic} alt="profilepic" className="w-48" />
-                    <div>
-                        {userInfo.birthday && userInfo.birthday !== "Invalid DateTime" ? (
-                            <p>{userInfo.birthday}</p>
+                    <div className="flex flex-col gap-2">
+                        <h2 className="text-2xl font-bold">{userInfo.display_name}</h2>
+                        {friendStatus ? <p>You are friends</p> : null}
+                        {friendStatus ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserXmark} className="w-5" />
+                                <button onClick={removeFriend}>Remove friend</button>
+                            </div>
                         ) : null}
-                        {userInfo.country ? <p>{countryDisplayName}</p> : null}
+                        {showRemoveFriendComp ? (
+                            <RemoveFriend
+                                apiurl={apiUrl}
+                                facebookid={facebookid}
+                                friendfacebookid={userfacebookid}
+                                friendname={userInfo.display_name}
+                                cancelremovefriend={cancelRemoveFriend}
+                                friendremoved={friendRemoved}
+                            />
+                        ) : null}
+                        {!friendStatus && friendRequestSent ? <p>Friend request sent</p> : null}
+                        {!friendStatus && !friendRequestSent ? (
+                            <button onClick={handleClick}>Add Friend</button>
+                        ) : null}
+
+                        {userInfo.birthday && userInfo.birthday !== "Invalid DateTime" ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faCakeCandles} className="w-5" />
+                                <p>{userInfo.birthday}</p>
+                            </div>
+                        ) : null}
+                        {userInfo.gender !== undefined && userInfo.gender !== "" ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faVenusMars} className="w-5" />
+                                <p>{userInfo.gender}</p>
+                            </div>
+                        ) : null}
+                        {userInfo.country ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faGlobe} className="w-5" />
+                                <p>{countryDisplayName}</p>
+                            </div>
+                        ) : null}
 
                         {userInfo.friends === undefined || userInfo.friends === 0 ? (
-                            <p>{userFriends}</p>
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserGroup} className="w-5" />
+                                <p>{userFriends}</p>
+                            </div>
                         ) : (
-                            <Link to={`/user/${userfacebookid}/friends`}>
-                                {userInfo.friends} {userInfo.friends > 1 ? "friends" : "friend"}
-                            </Link>
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserGroup} className="w-5" />
+                                <Link to={`/user/${userfacebookid}/friends`}>
+                                    {userInfo.friends} {userInfo.friends > 1 ? "friends" : "friend"}
+                                </Link>
+                            </div>
                         )}
                     </div>
                 </div>

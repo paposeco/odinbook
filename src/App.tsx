@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {Routes, Route} from "react-router-dom";
 import Login from "components/Login";
 import Logout from "components/Logout";
 import Homepage from "components/Homepage";
@@ -15,7 +15,7 @@ import FindUsers from "components/otherusers/FindUsers";
 import FindUsersNearYour from "components/otherusers/FindUsersNearYou";
 import Profile from "components/userprofile/Profile";
 import EditProfile from "components/userprofile/EditProfile";
-import type { EditableProfile, Friend } from "./common/types";
+import type {EditableProfile, Friend} from "./common/types";
 
 const App: React.FC = () => {
     const [token, setToken] = useState(localStorage.getItem("token"));
@@ -27,8 +27,9 @@ const App: React.FC = () => {
     const [requestsReceived, setRequestReceived] = useState<Friend[]>([]);
     const [requestsSent, setRequestSent] = useState<Friend[]>([]);
     const [userCountry, setUserCountry] = useState("");
+    const [requestsNumber, setRequestsNumber] = useState(0);
     const apiURL = "http://localhost:3000/";
-    const authBearerToken = function(childtoken: string, childfacebookdid: string): void {
+    const authBearerToken = function (childtoken: string, childfacebookdid: string): void {
         if (token === "") {
             setToken(childtoken);
             setFacebookID(childfacebookdid);
@@ -36,7 +37,7 @@ const App: React.FC = () => {
     };
 
     useEffect(() => {
-        const fetchUserInfo = async function() {
+        const fetchUserInfo = async function () {
             try {
                 const response = await fetch(apiURL + facebookID + "/headerinfo", {
                     method: "GET",
@@ -68,6 +69,7 @@ const App: React.FC = () => {
                 );
                 if (responseData.userprofile.requests_received.length > 0) {
                     setRequestReceived(responseData.userprofile.requests_received);
+                    setRequestsNumber(responseData.userprofile.requests_received.length);
                 }
                 if (responseData.userprofile.requests_sent.length > 0) {
                     setRequestSent(responseData.userprofile.requests_sent);
@@ -95,16 +97,16 @@ const App: React.FC = () => {
         }
     }, []);
 
-    const updateProfileImg = function(filepath: string): void {
+    const updateProfileImg = function (filepath: string): void {
         setprofilepic(filepath);
     };
 
-    const userLoggedOut = function() {
+    const userLoggedOut = function () {
         setToken("");
     };
 
-    const requestSent = function() {
-        const fetchRequestSent = async function() {
+    const requestSent = function () {
+        const fetchRequestSent = async function () {
             try {
                 const response = await fetch(apiURL + facebookID + "/headerinfo", {
                     method: "GET",
@@ -122,7 +124,7 @@ const App: React.FC = () => {
         fetchRequestSent();
     };
 
-    const updateCountry = function(countryvalue: string) {
+    const updateCountry = function (countryvalue: string) {
         setUserCountry(countryvalue);
     };
 
@@ -142,85 +144,96 @@ const App: React.FC = () => {
     } else {
         if (profileFetched) {
             return (
-                <div id="content" className="w-2/3 mx-auto bg-stone-50">
-                    <Header apiurl={apiURL} profilepic={profilepic} />
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
-                        />
-                        <Route
-                            path="/friends"
-                            element={
-                                <FriendsList apiurl={apiURL} updaterequestsent={requestSent} />
-                            }
-                        />
-                        <Route
-                            path="/user/:postAuthorID/post/:postID"
-                            element={<SinglePost apiurl={apiURL} />}
-                        />
-                        <Route path="/profile" element={<Profile apirul={apiURL} />} />
-                        <Route
-                            path="/editprofile"
-                            element={
-                                <EditProfile
-                                    apiurl={apiURL}
-                                    updateProfileImg={updateProfileImg}
-                                    currentprofile={userProfile}
-                                    updateCountry={updateCountry}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/user/:userfacebookid"
-                            element={<FriendProfile apiurl={apiURL} />}
-                        />
+                <div id="content" className="mx-auto bg-gray-100">
+                    <Header
+                        apiurl={apiURL}
+                        profilepic={profilepic}
+                        notifications={requestsNumber}
+                    />
+                    <div className="w-7/12 mx-auto min-h-screen">
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={<Homepage updateToken={authBearerToken} apiurl={apiURL} />}
+                            />
+                            <Route
+                                path="/friends"
+                                element={
+                                    <FriendsList apiurl={apiURL} updaterequestsent={requestSent} />
+                                }
+                            />
+                            <Route
+                                path="/user/:postAuthorID/post/:postID"
+                                element={<SinglePost apiurl={apiURL} />}
+                            />
+                            <Route path="/profile" element={<Profile apirul={apiURL} />} />
+                            <Route
+                                path="/editprofile"
+                                element={
+                                    <EditProfile
+                                        apiurl={apiURL}
+                                        updateProfileImg={updateProfileImg}
+                                        currentprofile={userProfile}
+                                        updateCountry={updateCountry}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/user/:userfacebookid"
+                                element={<FriendProfile apiurl={apiURL} />}
+                            />
 
-                        <Route
-                            path="/user/:userfacebookid/friends"
-                            element={
-                                <FriendsFriendsList
-                                    apiurl={apiURL}
-                                    updaterequestsent={requestSent}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/friendrequests"
-                            element={
-                                <FriendRequests
-                                    requests={requestsReceived}
-                                    apiurl={apiURL}
-                                    updaterequestsent={requestSent}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/friendrequestssent"
-                            element={
-                                <FriendRequestsSent
-                                    requestssent={requestsSent}
-                                    apiurl={apiURL}
-                                    updaterequestsent={requestSent}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/findusers"
-                            element={<FindUsers apiurl={apiURL} updaterequestsent={requestSent} />}
-                        />
-                        <Route
-                            path="/usersnearyou"
-                            element={
-                                <FindUsersNearYour
-                                    apiurl={apiURL}
-                                    updaterequestsent={requestSent}
-                                    currusercountry={userCountry}
-                                />
-                            }
-                        />
-                        <Route path="/logout" element={<Logout userloggedout={userLoggedOut} />} />
-                    </Routes>
+                            <Route
+                                path="/user/:userfacebookid/friends"
+                                element={
+                                    <FriendsFriendsList
+                                        apiurl={apiURL}
+                                        updaterequestsent={requestSent}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/friendrequests"
+                                element={
+                                    <FriendRequests
+                                        requests={requestsReceived}
+                                        apiurl={apiURL}
+                                        updaterequestsent={requestSent}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/friendrequestssent"
+                                element={
+                                    <FriendRequestsSent
+                                        requestssent={requestsSent}
+                                        apiurl={apiURL}
+                                        updaterequestsent={requestSent}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/findusers"
+                                element={
+                                    <FindUsers apiurl={apiURL} updaterequestsent={requestSent} />
+                                }
+                            />
+                            <Route
+                                path="/usersnearyou"
+                                element={
+                                    <FindUsersNearYour
+                                        apiurl={apiURL}
+                                        updaterequestsent={requestSent}
+                                        currusercountry={userCountry}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/logout"
+                                element={<Logout userloggedout={userLoggedOut} />}
+                            />
+                        </Routes>
+                    </div>
                 </div>
             );
         } else {

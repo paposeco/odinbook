@@ -2,6 +2,9 @@ import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import type {Author} from "src/common/types";
 import FriendThumbnail from "components/friends/FriendThumbnail";
+import {faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 
 interface FuncProps {
     apiurl: string;
@@ -57,8 +60,17 @@ const FriendsList: React.FC<FuncProps> = (props) => {
         return (
             <div className="w-3/4 mx-auto">
                 <h2 className="text-xl">Friends</h2>
-                <Link to="/friendrequestssent">Friend Requests Sent</Link>
-                <Link to="/findusers">Find more users</Link>
+                <div className="flex flex-col gap-2">
+                    <div className="flex flex-row gap-2 items-center">
+                        <FontAwesomeIcon icon={faUserPlus} className="w-5" />
+                        <Link to="/friendrequestssent">Friend Requests Sent</Link>
+                    </div>
+                    <div className="flex flex-row gap-2 items-center">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} className="w-5" />
+                        <Link to="/findusers">Find more users</Link>
+                    </div>
+                </div>
+
                 {friendsThumbnailComponents.length > 0 ? (
                     <ul>{friendsThumbnailComponents}</ul>
                 ) : (

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router";
 
@@ -77,7 +77,7 @@ const WhatsOnYourMind: React.FC<FuncProps> = (props) => {
     };
 
     return (
-        <div>
+        <div className="bg-white rounded-lg shadow">
             {!formVisible ? (
                 <div className="flex flex-row justify-start content-center p-8 my-4 gap-8">
                     <div>

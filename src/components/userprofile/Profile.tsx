@@ -4,6 +4,12 @@ import type {UserProfile, Post} from "src/common/types";
 import PostComponent from "components/content/Post";
 import WhatsOnYourMind from "components/content/WhatsOnYourMind";
 import {getCountryName} from "./CountrySelector";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCakeCandles} from "@fortawesome/free-solid-svg-icons";
+import {faVenusMars} from "@fortawesome/free-solid-svg-icons";
+import {faGlobe} from "@fortawesome/free-solid-svg-icons";
+import {faUserGroup} from "@fortawesome/free-solid-svg-icons";
+import {faPencil} from "@fortawesome/free-solid-svg-icons";
 
 interface FuncProps {
     apirul: string;
@@ -60,27 +66,54 @@ const Profile: React.FC<FuncProps> = (props) => {
     if (infoFetched) {
         return (
             <div>
-                <h2 className="text-lg">{userInfo.display_name}</h2>
-                <Link to="/editprofile">Edit profile</Link>
-                <div className="flex flex-row">
-                    <img src={apiUrl + userInfo.profile_pic} alt="profilepic" className="w-48" />
-                    <div>
+                <div className="flex flex-row gap-8">
+                    <img
+                        src={apiUrl + userInfo.profile_pic}
+                        alt="profilepic"
+                        className="w-48 rounded-full"
+                    />
+                    <div className="flex flex-col gap-2">
+                        <h2 className="text-2xl font-bold">{userInfo.display_name}</h2>
+
                         {userInfo.birthday !== undefined &&
                         userInfo.birthday !== "Invalid DateTime" ? (
-                            <p>{userInfo.date_birthday}</p>
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faCakeCandles} className="w-5" />
+                                <p>{userInfo.date_birthday}</p>
+                            </div>
                         ) : null}
                         {userInfo.gender !== undefined && userInfo.gender !== "" ? (
-                            <p>{userInfo.gender}</p>
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faVenusMars} className="w-5" />
+                                <p>{userInfo.gender}</p>
+                            </div>
                         ) : null}
-                        {userInfo.country !== undefined ? <p>{countryDisplayName}</p> : null}
+                        {userInfo.country !== undefined ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faGlobe} className="w-5" />
+                                <p>{countryDisplayName}</p>
+                            </div>
+                        ) : null}
                         {userInfo.friends === undefined || userInfo.friends.length === 0 ? (
-                            <p>No friends</p>
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserGroup} className="w-5" />
+                                <p>0 friends</p>
+                            </div>
                         ) : (
-                            <Link to={`/friends`}>
-                                {userInfo.friends.length}{" "}
-                                {userInfo.friends.length > 1 ? "friends" : "friend"}
-                            </Link>
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserGroup} className="w-5" />
+                                <Link to={`/friends`}>
+                                    {userInfo.friends.length}{" "}
+                                    {userInfo.friends.length > 1 ? "friends" : "friend"}
+                                </Link>
+                            </div>
                         )}
+                        <div className="flex flex-row gap-2 items-center">
+                            <FontAwesomeIcon icon={faPencil} className="w-5" />
+                            <Link to="/editprofile">
+                                <p>Edit profile</p>
+                            </Link>
+                        </div>
                     </div>
                 </div>
                 <WhatsOnYourMind apiurl={apiUrl} userprofile={true} />

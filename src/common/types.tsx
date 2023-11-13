@@ -36,6 +36,7 @@ export interface Friend {
     facebook_id: string;
     display_name: string;
     profile_pic: string;
+    gender?: string;
     birthday?: string;
     country?: string;
     posts?: string;

@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {useNavigate} from "react-router";
 import {useForm} from "react-hook-form";
 import EditProfilePic from "./EditProfilePic";
 import type {EditableProfile} from "src/common/types";
-import {Country, getCountryName} from "./CountrySelector";
+import {Country} from "./CountrySelector";
 
 interface FuncProps {
     apiurl: string;
