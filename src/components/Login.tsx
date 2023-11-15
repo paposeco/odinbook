@@ -21,11 +21,12 @@ const Login: React.FC<FuncProps> = function (props) {
             });
 
             const responseData = await response.json();
-            localStorage.setItem("token", responseData.token);
-            localStorage.setItem("facebookid", responseData.facebookid);
-            console.log("navigate");
-            props.authbearertoken(responseData.token, responseData.facebookid);
-            navigate("/");
+            if (response.status === 200) {
+                localStorage.setItem("token", responseData.token);
+                localStorage.setItem("facebookid", responseData.facebookid);
+                props.authbearertoken(responseData.token, responseData.facebookid);
+                navigate("/");
+            }
         } catch (err) {
             console.log(err);
         }

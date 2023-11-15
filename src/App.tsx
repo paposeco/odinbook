@@ -16,6 +16,7 @@ import FindUsersNearYour from "components/otherusers/FindUsersNearYou";
 import Profile from "components/userprofile/Profile";
 import EditProfile from "components/userprofile/EditProfile";
 import type {EditableProfile, Friend} from "./common/types";
+import Fetching from "components/Fetching";
 
 const App: React.FC = () => {
     const [token, setToken] = useState(localStorage.getItem("token"));
@@ -69,8 +70,13 @@ const App: React.FC = () => {
                 );
                 if (responseData.userprofile.requests_received.length > 0) {
                     setRequestReceived(responseData.userprofile.requests_received);
+                    // requests number and birthdays
                     setRequestsNumber(responseData.userprofile.requests_received.length);
                 }
+                if (responseData.userprofile.birthdaystoday.length > 0) {
+                    setRequestsNumber(responseData.userprofile.birthdaystoday.length);
+                }
+
                 if (responseData.userprofile.requests_sent.length > 0) {
                     setRequestSent(responseData.userprofile.requests_sent);
                 }
@@ -237,7 +243,7 @@ const App: React.FC = () => {
                 </div>
             );
         } else {
-            return <div>fetching</div>;
+            return <Fetching />;
         }
     }
 };

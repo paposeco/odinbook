@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
+import {faPencil} from "@fortawesome/free-solid-svg-icons";
+import {faFloppyDisk} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 type FormValues = {
     newprofilepic: string;
@@ -19,7 +22,11 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
     );
     const [showImageForm, setShowImageForm] = useState(false);
     const [imgchanged, setimgchanged] = useState(false);
+
     const onSubmitImage = async function (data) {
+        if (data.newprofilepic.length === 0) {
+            return;
+        }
         const formData = new FormData();
         formData.append("newprofilepic", data.newprofilepic[0]);
         try {
@@ -44,6 +51,9 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
         setShowImageForm(true);
     };
 
+    const handleCancel = function (event: React.MouseEvent) {
+        setShowImageForm(false);
+    };
     useEffect(() => {
         if (imgchanged) {
             setProfilePicLocation(props.apiurl + localStorage.getItem("profilepic"));
@@ -51,9 +61,17 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
     }, [imgchanged]);
 
     return (
-        <div>
+        <div className="my-2">
             <img src={profilepiclocation} alt="profilepic" className="w-96" />
-            <button onClick={showImgForm}>Change profile image</button>
+            {!showImageForm ? (
+                <button
+                    onClick={showImgForm}
+                    className="bg-facebookblue shadow py-2 px-6 my-2 text-white rounded-lg hover:font-bold"
+                >
+                    <FontAwesomeIcon icon={faPencil} className="w-5 pr-1" />
+                    Edit image
+                </button>
+            ) : null}
             {showImageForm ? (
                 <form
                     action=""
@@ -68,7 +86,19 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
                         name="newprofilepic"
                         {...register("newprofilepic")}
                     />
-                    <input type="submit" value="Upload" className="w-fit" />
+                    <div className="flex flex-row gap-2">
+                        <input
+                            type="submit"
+                            value="Upload"
+                            className=" max-w-fit bg-facebookblue shadow py-2 px-6 my-2 text-white rounded-lg cursor-pointer hover:font-bold "
+                        />
+                        <button
+                            onClick={handleCancel}
+                            className=" max-w-fit bg-facebookblue shadow py-2 px-6 my-2 text-white rounded-lg cursor-pointer hover:font-bold "
+                        >
+                            Cancel
+                        </button>
+                    </div>
                 </form>
             ) : null}
         </div>

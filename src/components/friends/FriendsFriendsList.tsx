@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {useParams} from "react-router";
 import type {Author} from "src/common/types";
 import FriendThumbnail from "components/friends/FriendThumbnail";
+import Fetching from "components/Fetching";
 
 interface FuncProps {
     apiurl: string;
@@ -57,12 +58,16 @@ const FriendsFriendsList: React.FC<FuncProps> = (props) => {
         }
     }, []);
 
-    return (
-        <div className="w-2/3 mx-auto">
-            <h2 className="text-xl">Friends</h2>
-            <ul>{friendsThumbnailComponents}</ul>
-        </div>
-    );
+    if (!friendsFetched) {
+        return <Fetching />;
+    } else {
+        return (
+            <div className="w-2/3 mx-auto">
+                <h2 className="text-2xl mb-2">Friends</h2>
+                <ul className="flex flex-row flex-wrap">{friendsThumbnailComponents}</ul>
+            </div>
+        );
+    }
 };
 
 export default FriendsFriendsList;

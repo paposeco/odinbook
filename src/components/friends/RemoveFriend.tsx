@@ -35,10 +35,22 @@ const RemoveFriend: React.FC<FuncProps> = function (props) {
     };
 
     return (
-        <div>
-            <p>Do you want to remove {props.friendname} from your list of friends?</p>
-            <button onClick={handleClick}>Yes</button>
-            <button onClick={props.cancelremovefriend}>Cancel</button>
+        <div className="flex flex-row gap-2 items-center">
+            <p>Remove {props.friendname} from your list of friends?</p>
+            <div className="flex flex-row gap-2">
+                <button
+                    onClick={handleClick}
+                    className="bg-facebookblue shadow py-2 px-6 text-white rounded-lg cursor-pointer hover:font-bold "
+                >
+                    Yes
+                </button>
+                <button
+                    onClick={props.cancelremovefriend}
+                    className="bg-facebookblue shadow py-2 px-6 text-white rounded-lg cursor-pointer hover:font-bold "
+                >
+                    Cancel
+                </button>
+            </div>
         </div>
     );
 };

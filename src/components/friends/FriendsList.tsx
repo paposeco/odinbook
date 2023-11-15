@@ -5,6 +5,7 @@ import FriendThumbnail from "components/friends/FriendThumbnail";
 import {faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+import Fetching from "components/Fetching";
 
 interface FuncProps {
     apiurl: string;
@@ -58,9 +59,9 @@ const FriendsList: React.FC<FuncProps> = (props) => {
 
     if (friendsFetched) {
         return (
-            <div className="w-3/4 mx-auto">
-                <h2 className="text-xl">Friends</h2>
-                <div className="flex flex-col gap-2">
+            <div className="w-2/3 mx-auto">
+                <h2 className="text-2xl mb-2">Friends</h2>
+                <div className="flex flex-col gap-4">
                     <div className="flex flex-row gap-2 items-center">
                         <FontAwesomeIcon icon={faUserPlus} className="w-5" />
                         <Link to="/friendrequestssent">Friend Requests Sent</Link>
@@ -72,14 +73,14 @@ const FriendsList: React.FC<FuncProps> = (props) => {
                 </div>
 
                 {friendsThumbnailComponents.length > 0 ? (
-                    <ul>{friendsThumbnailComponents}</ul>
+                    <ul className="flex flex-row flex-wrap">{friendsThumbnailComponents}</ul>
                 ) : (
-                    <p>You don't have any friends yet</p>
+                    <p>You don't have any friends yet.</p>
                 )}
             </div>
         );
     } else {
-        return <p>fetching</p>;
+        return <Fetching />;
     }
 };
 

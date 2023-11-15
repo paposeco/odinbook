@@ -10,6 +10,7 @@ import {faVenusMars} from "@fortawesome/free-solid-svg-icons";
 import {faGlobe} from "@fortawesome/free-solid-svg-icons";
 import {faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import {faPencil} from "@fortawesome/free-solid-svg-icons";
+import Fetching from "components/Fetching";
 
 interface FuncProps {
     apirul: string;
@@ -65,12 +66,12 @@ const Profile: React.FC<FuncProps> = (props) => {
     }, []);
     if (infoFetched) {
         return (
-            <div>
+            <div className="w-2/3 mx-auto">
                 <div className="flex flex-row gap-8">
                     <img
                         src={apiUrl + userInfo.profile_pic}
                         alt="profilepic"
-                        className="w-48 rounded-full"
+                        className="w-48 h-48 rounded-full object-cover aspect-square"
                     />
                     <div className="flex flex-col gap-2">
                         <h2 className="text-2xl font-bold">{userInfo.display_name}</h2>
@@ -120,12 +121,12 @@ const Profile: React.FC<FuncProps> = (props) => {
                 {postsToDisplay.length > 0 ? (
                     <ul>{postsToDisplay}</ul>
                 ) : (
-                    <p>You haven't posted anything</p>
+                    <p className="my-4">You haven't posted anything.</p>
                 )}
             </div>
         );
     } else {
-        return <div>fetching</div>;
+        return <Fetching />;
     }
 };
 

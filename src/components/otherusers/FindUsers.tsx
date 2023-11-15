@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import type {Friend} from "src/common/types";
 import FriendThumbnail from "components/friends/FriendThumbnail";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+import {faUsersViewfinder} from "@fortawesome/free-solid-svg-icons";
+import Fetching from "components/Fetching";
+
 interface FuncProps {
     apiurl: string;
     updaterequestsent(): void;
@@ -19,7 +23,6 @@ const FindUsers: React.FC<FuncProps> = function (props) {
     const [fetchedMore, setFetchedMore] = useState(false);
     const [endTimeline, setEndTimeline] = useState(false);
     const [fetchCounter, setFetchCounter] = useState(0);
-    const [showbox, setshowbox] = useState(false);
     const [searchcontent, setsearchcontent] = useState("");
 
     useEffect(() => {
@@ -97,10 +100,6 @@ const FindUsers: React.FC<FuncProps> = function (props) {
         }
     }, []);
 
-    const showsearchbox = function (event: React.MouseEvent) {
-        setshowbox(true);
-    };
-
     //handle both errors and results
     const handleSubmit = async function (event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -122,6 +121,8 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                     const requestexists = currentUser.requests_sent.find(
                         (element) => element.facebook_id === user.facebook_id
                     );
+                    const isFriend = currentUser.friends.includes(user._id);
+
                     let requestsent = false;
                     if (requestexists !== undefined) {
                         requestsent = true;
@@ -132,7 +133,7 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                             key={user._id}
                             apiurl={apiUrl}
                             requestreceived={false}
-                            sendrequest={true}
+                            sendrequest={!isFriend}
                             requestsent={requestsent}
                             updaterequestsent={props.updaterequestsent}
                         />
@@ -157,45 +158,55 @@ const FindUsers: React.FC<FuncProps> = function (props) {
 
     if (usersFetched) {
         return (
-            <div className="w-3/4 mx-auto">
-                <h2 className="text-xl">Odinbook users</h2>
-                <div>
-                    <Link to="/usersnearyou">Find users near you</Link>
-                    <button onClick={showsearchbox}>Search user by name</button>
-                    {showbox ? (
-                        <form action="" method="" onSubmit={handleSubmit}>
-                            <input
-                                type="search"
-                                name="searchuser"
-                                id="searchuser"
-                                minLength={2}
-                                onChange={handleChange}
-                            />
-                            <input type="submit" value="Search" />
-                        </form>
-                    ) : null}
+            <div className="w-2/3 mx-auto">
+                <h2 className="text-2xl mb-2">Browse Odinbook Users</h2>
+                <div className="flex flex-row gap-8">
+                    <form
+                        action=""
+                        method=""
+                        onSubmit={handleSubmit}
+                        className="flex flex-row gap-2 items-center"
+                    >
+                        <input
+                            type="search"
+                            name="searchuser"
+                            id="searchuser"
+                            minLength={2}
+                            onChange={handleChange}
+                            placeholder="Search user by name"
+                            className="rounded-full"
+                        />
+                        <div className="cursor-pointer">
+                            <FontAwesomeIcon icon={faMagnifyingGlass} className="w-5 pr-2" />
+                            <input type="submit" value="Search" className="cursor-pointer" />
+                        </div>
+                    </form>
+                    <div className="flex flex-row gap-2 items-center text-lg">
+                        <FontAwesomeIcon icon={faUsersViewfinder} className="w-5" />
+                        <Link to="/usersnearyou">Browse users near you</Link>
+                    </div>
                 </div>
                 {displayUsers &&
                 usersThumbnailComponents !== undefined &&
                 usersThumbnailComponents.length > 0 ? (
                     <div>
-                        <ul className="flex flex-row">{usersThumbnailComponents}</ul>
+                        <ul className="flex flex-row flex-wrap">{usersThumbnailComponents}</ul>
                     </div>
                 ) : displayUsers && !displaySearchResults ? (
                     <p>You are friends with everyone in Odinbook.</p>
                 ) : null}
                 {displaySearchResults ? (
                     <div>
-                        <ul className="flex flex-row">{searchResults}</ul>
+                        <ul className="flex flex-row flex-wrap">{searchResults}</ul>
                     </div>
                 ) : null}
                 {displaySearchResults && searchResults.length === 0 ? (
-                    <p>Couldn't find any users with that name</p>
+                    <p>Couldn't find any users with that name.</p>
                 ) : null}
             </div>
         );
     } else if (!usersFetched && fetchCounter === 0) {
-        return <p>fetching</p>;
+        return <Fetching />;
     }
 };
 

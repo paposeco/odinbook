@@ -23,6 +23,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
     const [prettydate, setprettydate] = useState("");
     const apiUrl = props.apiurl;
     const facebookID = props.facebookid;
+    const postAuthor = props.postinfo.author.facebook_id;
     const profilePic = localStorage.getItem("profilepic");
     const token = localStorage.getItem("token");
     const [commentsToDisplay, setCommentsToDisplay] = useState<JSX.Element[]>(
@@ -158,7 +159,11 @@ const PostComponent: React.FC<FuncProps> = function (props) {
                 <div>
                     <p>
                         <Link
-                            to={`user/${postInfo.author.facebook_id}`}
+                            to={
+                                postAuthor === facebookID
+                                    ? "/profile"
+                                    : `user/${postInfo.author.facebook_id}`
+                            }
                             className="no-underline text-gray-700 text-lg font-semibold"
                         >
                             {postInfo.author.display_name}
@@ -233,7 +238,11 @@ const PostComponent: React.FC<FuncProps> = function (props) {
                                 onChange={handleChange}
                                 className="rounded-full w-full"
                             />
-                            <input type="submit" value="Send" />
+                            <input
+                                type="submit"
+                                value="Send"
+                                className="underline cursor-pointer"
+                            />
                         </form>
                     </div>
                 </div>

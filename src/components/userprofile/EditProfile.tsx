@@ -55,8 +55,8 @@ const EditProfile: React.FC<FuncProps> = function (props) {
     };
 
     return (
-        <div>
-            <h3>Edit profile</h3>
+        <div className="w-2/3 mx-auto bg-white rounded-lg p-8">
+            <h2 className="text-2xl">Edit Profile</h2>
             <EditProfilePic apiurl={apiUrl} updateProfileImg={props.updateProfileImg} />
             <div>
                 <form
@@ -67,7 +67,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                     className="editprofileform"
                 >
                     <div>
-                        <label htmlFor="displayname" className="">
+                        <label htmlFor="displayname" className="text-lg">
                             Display name:
                         </label>
                         <input
@@ -105,7 +105,11 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                             ))}
                         </select>
                     </div>
-                    <input type="submit" value="Save" />
+                    <input
+                        type="submit"
+                        value="Save"
+                        className="justify-self-start max-w-fit bg-facebookblue shadow py-2 px-6 my-2 text-white rounded-lg cursor-pointer hover:font-bold"
+                    />
                 </form>
             </div>
         </div>

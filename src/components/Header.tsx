@@ -14,9 +14,8 @@ interface FuncProps {
 
 const Header: React.FC<FuncProps> = (props) => {
     const display_name = localStorage.getItem("displayname");
-    // const notifications = Number(props.notifications);
-    const notifications = 3;
     const [clickedProfile, setClickedProfile] = useState(false);
+    const [clickedNotifications, setClickedNotifications] = useState(false);
 
     const handleClick: React.MouseEventHandler = function (event) {
         if (clickedProfile) {
@@ -26,6 +25,10 @@ const Header: React.FC<FuncProps> = (props) => {
         }
     };
 
+    const handleClickNotifications: React.MouseEventHandler = function (event) {
+        setClickedNotifications(true);
+    };
+
     return (
         <div className="mb-4 w-full mx-auto">
             <div className="flex flex-row justify-between bg-white px-4 pt-4 pb-4 shadow">
@@ -33,15 +36,18 @@ const Header: React.FC<FuncProps> = (props) => {
                     <FontAwesomeIcon icon={faFacebook} />
                 </Link>
                 <div className="flex flex-row gap-4">
-                    <div className="w-12 h-12 bg-slate-200 rounded-full flex content-center justify-center items-center">
+                    <div
+                        className="w-12 h-12 bg-slate-200 rounded-full flex content-center justify-center items-center"
+                        onClick={handleClickNotifications}
+                    >
                         <Link to="/friendrequests" className="no-underline relative">
                             <FontAwesomeIcon
                                 icon={faBell}
                                 className="text-3xl text-facebookblue "
                             />
-                            {notifications > 0 ? (
+                            {props.notifications > 0 && !clickedNotifications ? (
                                 <p className="absolute rounded-full bg-red-500 text-white text-xs left-7 -top-1.5 px-2 py-1">
-                                    {notifications}
+                                    {props.notifications}
                                 </p>
                             ) : null}{" "}
                         </Link>
@@ -50,7 +56,7 @@ const Header: React.FC<FuncProps> = (props) => {
                         <img
                             src={props.apiurl + props.profilepic}
                             alt="profile pic"
-                            className="w-12 h-12 rounded-full"
+                            className="w-12 h-12 rounded-full object-cover aspect-square"
                         />
                         <FontAwesomeIcon
                             icon={faChevronDown}
@@ -58,7 +64,7 @@ const Header: React.FC<FuncProps> = (props) => {
                         />
                     </button>
                     {clickedProfile ? (
-                        <div className="absolute right-4 top-20 ">
+                        <div className="absolute right-4 top-20 " onClick={handleClick}>
                             <Link to="/profile" className="no-underline">
                                 <p className="text-lg py-4 px-8 my-1 text-slate-800 bg-white shadow rounded-lg hover:bg-facebookblue hover:text-white">
                                     Profile
@@ -82,7 +88,7 @@ const Header: React.FC<FuncProps> = (props) => {
                     <img
                         src={props.apiurl + props.profilepic}
                         alt="profile pic"
-                        className="w-10 h-10 rounded-full ml-1"
+                        className="w-10 h-10 rounded-full object-cover aspect-square"
                     />
                     <p className="text-lg">{display_name}</p>
                 </Link>

@@ -29,7 +29,7 @@ const FriendRequestsSent: React.FC<FuncProps> = function (props) {
     }, []);
     return (
         <div className="w-2/3 mx-auto">
-            <h2 className="text-xl">Friend requests sent</h2>
+            <h2 className="text-2xl mb-2">Friend requests sent</h2>
             {props.requestssent.length > 0 ? (
                 <ul>{userThumbnailComponents}</ul>
             ) : (

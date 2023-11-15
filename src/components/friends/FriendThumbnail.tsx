@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import type {Friend} from "src/common/types";
+import {faUserClock} from "@fortawesome/free-solid-svg-icons";
+import {faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface FuncProps {
     friend: Friend;
@@ -8,12 +11,13 @@ interface FuncProps {
     requestreceived: boolean;
     sendrequest: boolean;
     requestsent: boolean;
-    updaterequestssent(): void;
+    updaterequestsent(): void;
 }
 
 const FriendThumbnail: React.FC<FuncProps> = (props) => {
-    const userurl = "/user/" + props.friend.facebook_id;
     const facebookid = localStorage.getItem("facebookid");
+    const userurl =
+        facebookid === props.friend.facebook_id ? "/profile" : "/user/" + props.friend.facebook_id;
     const token = localStorage.getItem("token");
     const navigate = useNavigate();
     const [buttonText, setButtonText] = useState("Send friend request");
@@ -55,14 +59,14 @@ const FriendThumbnail: React.FC<FuncProps> = (props) => {
             setDisableButton(true);
             setButtonText("Friend request sent");
             setRequestStatus(true);
-            props.updaterequestssent();
+            props.updaterequestsent();
         }
     };
 
     return (
         <li
             key={props.friend.facebook_id}
-            className="flex flex-col gap-4 justify-center w-72 bg-stone-100 rounded-lg p-8 m-8 "
+            className="flex flex-col gap-2 justify-center w-60 bg-white rounded-lg p-6 m-6 "
         >
             <Link to={userurl} className="text-center text-sm no-underline text-gray-700 font-bold">
                 {props.friend.display_name}
@@ -71,18 +75,28 @@ const FriendThumbnail: React.FC<FuncProps> = (props) => {
                 <img
                     src={props.apiurl + props.friend.profile_pic}
                     alt="profilepic"
-                    className="rounded-full aspect-square w-48 h-48 object-cover mx-auto"
+                    className="rounded-full aspect-square w-40 h-40 object-cover mx-auto"
                 />
             </Link>
             {props.requestreceived ? (
-                <button onClick={acceptfriend}>Accept friend request</button>
-            ) : null}
-            {props.sendrequest && !requestStatus ? (
-                <button onClick={sendRequest} disabled={disableButton}>
-                    {buttonText}
+                <button onClick={acceptfriend} className="underline">
+                    Accept friend request
                 </button>
             ) : null}
-            {props.sendrequest && requestStatus ? <p>Friend request sent</p> : null}
+            {props.sendrequest && !requestStatus ? (
+                <div className="flex flex-row gap-2 items-center justify-center">
+                    <FontAwesomeIcon icon={faUserPlus} className="w-5" />
+                    <button onClick={sendRequest} disabled={disableButton} className="underline">
+                        {buttonText}
+                    </button>
+                </div>
+            ) : null}
+            {props.sendrequest && requestStatus ? (
+                <div className="flex flex-row gap-2 items-center justify-center">
+                    <FontAwesomeIcon icon={faUserClock} className="w-5" />
+                    <p>Friend request sent</p>
+                </div>
+            ) : null}
         </li>
     );
 };

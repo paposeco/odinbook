@@ -76,13 +76,20 @@ const WhatsOnYourMind: React.FC<FuncProps> = (props) => {
         }
     };
 
+    const cancelNewPost = function (event: React.MouseEvent) {
+        setFormVisible(false);
+        setFileImage(false);
+        setCurrentImageUrl("");
+        setUrlImage(false);
+    };
+
     return (
         <div className="bg-white rounded-lg shadow">
             {!formVisible ? (
                 <div className="flex flex-row justify-start content-center p-8 my-4 gap-8">
                     <div>
                         <img
-                            className="w-10 h-10 rounded-full"
+                            className="w-10 h-10 rounded-full object-cover aspect-square"
                             src={props.apiurl + profile_pic}
                             alt="profilepic"
                         />
@@ -96,7 +103,7 @@ const WhatsOnYourMind: React.FC<FuncProps> = (props) => {
             ) : null}
 
             {formVisible ? (
-                <div className="bg-stone-100 rounded-lg p-8 my-4">
+                <div className="bg-white rounded-lg p-8 my-4">
                     <div className="flex flex-row gap-4">
                         <img
                             className="w-10 h-10 rounded-full"
@@ -120,10 +127,11 @@ const WhatsOnYourMind: React.FC<FuncProps> = (props) => {
                             className="form-textarea rounded"
                             placeholder={`What's on your mind, ${displayname[0]}?`}
                             rows={10}
+                            autoFocus={true}
                         ></textarea>
                         <p>
-                            Add an image to your post by uploading a file or by adding a link to an
-                            image.
+                            Add an image to your post by uploading a file or by adding a url on the
+                            box below.
                         </p>
                         <input
                             type="file"
@@ -143,7 +151,19 @@ const WhatsOnYourMind: React.FC<FuncProps> = (props) => {
                             value={currentImageUrl}
                             placeholder="Image URL"
                         />
-                        <input type="submit" value="Post" className="text-lg font-semibold" />
+                        <div className="flex flex-row gap-2">
+                            <input
+                                type="submit"
+                                value="Post"
+                                className="bg-facebookblue shadow py-2 px-6 my-2 w-min text-white rounded-lg cursor-pointer hover:font-bold"
+                            />
+                            <button
+                                onClick={cancelNewPost}
+                                className="bg-facebookblue shadow py-2 px-6 my-2 w-min text-white rounded-lg cursor-pointer hover:font-bold"
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </form>
                 </div>
             ) : null}

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import FriendThumbnail from "components/friends/FriendThumbnail";
 import {getCountryName} from "components/userprofile/CountrySelector";
+import Fetching from "components/Fetching";
 
 interface FuncProps {
     apiurl: string;
@@ -65,19 +66,19 @@ const FindUsers: React.FC<FuncProps> = function (props) {
 
     if (usersFetched) {
         return (
-            <div className="w-3/4 mx-auto">
-                <h2 className="text-xl">Odinbook users in {countryname}</h2>
+            <div className="w-2/3 mx-auto">
+                <h2 className="text-2xl">Odinbook users in {countryname}</h2>
                 {usersThumbnailComponents !== undefined && usersThumbnailComponents.length > 0 ? (
                     <div>
                         <ul className="flex flex-row">{usersThumbnailComponents}</ul>
                     </div>
                 ) : (
-                    <p>You are friends with everyone in Odinbook.</p>
+                    <p>You are friends with everyone in Odinbook from your country.</p>
                 )}
             </div>
         );
     } else if (!usersFetched) {
-        return <p>fetching</p>;
+        return <Fetching />;
     }
 };
 

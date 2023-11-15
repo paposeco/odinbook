@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import Fetching from "./Fetching";
 
 interface FuncProps {
     updateToken(arg1: string, arg2: string): void;
@@ -24,7 +25,7 @@ const Loggedin: React.FC<FuncProps> = (props) => {
             navigate("/");
         }
     }, []);
-    return <div>logging in</div>;
+    return <Fetching />;
 };
 
 export default Loggedin;

@@ -3,6 +3,8 @@ import {Link} from "react-router-dom";
 import type {Post} from "../common/types";
 import PostComponent from "components/content/Post";
 import WhatsOnYourMind from "./content/WhatsOnYourMind";
+import Fetching from "./Fetching";
+import {setEngine} from "crypto";
 
 interface FuncProps {
     updateToken(arg1: string, arg2: string): void;
@@ -39,6 +41,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
                     }
                 );
                 const responseData = await response.json();
+                console.log("fetch");
                 const componentsArray = [...postsToDisplay];
                 responseData.timelinePosts.map((apost: Post) => {
                     componentsArray.push(
@@ -65,7 +68,11 @@ const Homepage: React.FC<FuncProps> = (props) => {
         };
         if (newPost) {
             setNewPost(false);
+            setPostsToDisplay([]);
             fetchTimeline();
+            setFetchCounter(0);
+            setPostsFetched(false);
+            setEndTimeline(false);
         }
         if (!postsFetched) {
             if (fetchedMore) {
@@ -100,7 +107,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
         }
     }, []);
 
-    // header, notificacoes e logout
+    //  return <Fetching />;
     if (token === "") {
         return (
             <div>
@@ -109,11 +116,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
             </div>
         );
     } else if (!postsFetched && fetchCounter === 0) {
-        return (
-            <div>
-                <p>fetching</p>
-            </div>
-        );
+        return <Fetching />;
     } else {
         return (
             <div className="my-8 w-2/3 mx-auto">

@@ -15,9 +15,22 @@ const Logout: React.FC<FuncProps> = function (props) {
 
     return (
         <div>
+            <h2 className="text-2xl">Logout</h2>
             Are you sure you want to logout?
-            <button onClick={handleClick}>Yes</button>
-            <Link to="/">Cancel</Link>
+            <div className="flex flex-row gap-2">
+                <button
+                    onClick={handleClick}
+                    className="bg-facebookblue shadow py-2 px-6 my-2 text-white rounded-lg cursor-pointer hover:font-bold "
+                >
+                    Yes
+                </button>
+                <Link
+                    to="/"
+                    className="bg-facebookblue shadow py-2 px-6 my-2 text-white rounded-lg cursor-pointer hover:font-bold no-underline"
+                >
+                    Cancel
+                </Link>
+            </div>
         </div>
     );
 };

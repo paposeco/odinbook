@@ -965,6 +965,12 @@ module.exports = {
     extend:{
       colors:{
         "facebookblue": "#1877F2",
+      },
+      rotate:{
+        "135": "135deg",
+        "225": "225deg",
+        "270": "270deg",
+        "315": "315deg",
       }
     }
   },

@@ -7,6 +7,7 @@ import {faThumbsUp} from "@fortawesome/free-regular-svg-icons";
 import {faThumbsUp as thumbusUpSolid} from "@fortawesome/free-solid-svg-icons";
 import {faComments} from "@fortawesome/free-regular-svg-icons";
 import {DateTime} from "luxon";
+import Fetching from "components/Fetching";
 
 interface FuncProps {
     apiurl: string;
@@ -177,7 +178,7 @@ const SinglePost: React.FC<FuncProps> = function (props) {
     }, [postInfo]);
 
     if (!postInfo) {
-        return <div>loading</div>;
+        return <Fetching />;
     } else {
         return (
             <div className="flex flex-col gap-1 my-8 bg-white shadow rounded-lg py-8 w-2/3 mx-auto">
@@ -266,7 +267,11 @@ const SinglePost: React.FC<FuncProps> = function (props) {
                                     onChange={handleChange}
                                     className="rounded-full w-full"
                                 />
-                                <input type="submit" value="Send" />
+                                <input
+                                    type="submit"
+                                    value="Send"
+                                    className="underline cursor-pointer"
+                                />
                             </form>
                         </div>
                     </div>

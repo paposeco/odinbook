@@ -1,6 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {DateTime} from "luxon";
+import {faBirthdayCake} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface FriendInfo {
     displayname: string;
@@ -21,15 +23,36 @@ const Birthdays: React.FC<FuncProps> = function (props) {
     const friendbirthday = new Date(props.friendinfo.birthday);
     const birthDay = friendbirthday.getDate();
     const birthMonth = DateTime.fromJSDate(friendbirthday).monthLong;
+    const birthYear = DateTime.fromJSDate(friendbirthday).year;
+    const age = Number(now.year) - Number(birthYear);
+
     return (
-        <div>
+        <div className="my-4">
             {props.future ? (
-                <p>
-                    {birthDay} {birthMonth}
-                </p>
+                <div className="my-4">
+                    <p className="text-xl">
+                        {birthDay} {birthMonth}
+                    </p>
+                </div>
             ) : null}
-            <img src={props.apirul + props.friendinfo.profilepic} alt="profilepic" />
-            <Link to={`/user/${props.friendinfo.facebookid}/`}>{props.friendinfo.displayname}</Link>
+
+            <div className="flex flex-row items-center">
+                <Link to={`/user/${props.friendinfo.facebookid}/`}>
+                    <img
+                        src={props.apirul + props.friendinfo.profilepic}
+                        alt="profilepic"
+                        className="w-56 h-56 rounded-full aspect-square object-cover mr-4"
+                    />
+                </Link>
+
+                <Link
+                    to={`/user/${props.friendinfo.facebookid}/`}
+                    className="text-lg text-slate-800"
+                >
+                    {props.friendinfo.displayname}
+                </Link>
+                <span className="text-lg text-slate-800">, {age} years old</span>
+            </div>
         </div>
     );
 };

@@ -11,6 +11,9 @@ import {faVenusMars} from "@fortawesome/free-solid-svg-icons";
 import {faGlobe} from "@fortawesome/free-solid-svg-icons";
 import {faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import {faUserXmark} from "@fortawesome/free-solid-svg-icons";
+import {faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import {faUserClock} from "@fortawesome/free-solid-svg-icons";
+import Fetching from "components/Fetching";
 
 interface FuncProps {
     apiurl: string;
@@ -119,7 +122,8 @@ const UserProfile: React.FC<FuncProps> = (props) => {
             }
         });
         if (response.status === 201) {
-            setFriendStatus(true);
+            setFriendRequestSent(true);
+            // setFriendStatus(true);
         }
     };
 
@@ -137,15 +141,15 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     };
 
     if (!infoFetched) {
-        return <div>fetching</div>;
+        return <Fetching />;
     } else if (infoFetched && statusChecked) {
         return (
-            <div>
+            <div className="w-2/3 mx-auto">
                 <div className="flex flex-row gap-8">
                     <img
                         src={apiUrl + userInfo.profile_pic}
                         alt="profilepic"
-                        className="w-48 rounded-full"
+                        className="w-48 rounded-full aspect-square object-cover h-48"
                     />
                     <div className="flex flex-col gap-2">
                         <h2 className="text-2xl font-bold">{userInfo.display_name}</h2>
@@ -153,7 +157,9 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                         {friendStatus ? (
                             <div className="flex flex-row gap-2 items-center">
                                 <FontAwesomeIcon icon={faUserXmark} className="w-5" />
-                                <button onClick={removeFriend}>Remove friend</button>
+                                <button onClick={removeFriend} className="underline">
+                                    Remove friend
+                                </button>
                             </div>
                         ) : null}
                         {showRemoveFriendComp ? (
@@ -166,9 +172,17 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                                 friendremoved={friendRemoved}
                             />
                         ) : null}
-                        {!friendStatus && friendRequestSent ? <p>Friend request sent</p> : null}
+                        {!friendStatus && friendRequestSent ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserClock} className="w-5" />
+                                <p>Friend request sent</p>
+                            </div>
+                        ) : null}
                         {!friendStatus && !friendRequestSent ? (
-                            <button onClick={handleClick}>Add Friend</button>
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserPlus} className="w-5" />
+                                <button onClick={handleClick}>Add Friend</button>
+                            </div>
                         ) : null}
 
                         {userInfo.birthday && userInfo.birthday !== "Invalid DateTime" ? (
@@ -190,26 +204,27 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                             </div>
                         ) : null}
 
-                        {userInfo.friends === undefined || userInfo.friends === 0 ? (
-                            <div className="flex flex-row gap-2 items-center">
-                                <FontAwesomeIcon icon={faUserGroup} className="w-5" />
-                                <p>{userFriends}</p>
-                            </div>
-                        ) : (
+                        {friendStatus && userInfo.friends > 0 ? (
                             <div className="flex flex-row gap-2 items-center">
                                 <FontAwesomeIcon icon={faUserGroup} className="w-5" />
                                 <Link to={`/user/${userfacebookid}/friends`}>
                                     {userInfo.friends} {userInfo.friends > 1 ? "friends" : "friend"}
                                 </Link>
                             </div>
-                        )}
+                        ) : null}
+                        {friendStatus && userInfo.friends === 0 ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserGroup} className="w-5" />
+                                <p>{userFriends}</p>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
 
                 {postsToDisplay.length > 0 ? (
                     <ul>{postsToDisplay}</ul>
                 ) : (
-                    <p>This user hasn't posted anything yet</p>
+                    <p className="my-4">This user hasn't posted anything yet.</p>
                 )}
             </div>
         );

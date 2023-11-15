@@ -3,6 +3,10 @@ import type {Friend} from "src/common/types";
 import FriendThumbnail from "./FriendThumbnail";
 import Birthdays from "./Birthdays";
 import {DateTime} from "luxon";
+import {faBirthdayCake} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCalendarDays} from "@fortawesome/free-regular-svg-icons";
+import Fetching from "components/Fetching";
 
 interface FuncProps {
     requests: Friend[];
@@ -86,27 +90,51 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
         }
     }, []);
 
-    return (
-        <div className="w-2/3 mx-auto">
-            {birthdaysToday.length === 0 && nearBirthdays.length === 0 ? (
-                <h3>No birthdays in the near future</h3>
-            ) : null}
-            {birthdaysToday.length > 0 ? (
-                <h3>
-                    Today ({month} {day}), say happy birthday to:
-                </h3>
-            ) : null}
-            {birthdaysToday.length > 0 ? <ul>{birthdaysToday}</ul> : null}
-            {nearBirthdays.length > 0 ? <h2>Birthdays in the near future:</h2> : null}
-            {nearBirthdays.length > 0 ? <ul>{nearBirthdays}</ul> : null}
-            <h2 className="text-xl">Friend requests received</h2>
-            {props.requests.length > 0 ? (
-                <ul>{userThumbnailComponents}</ul>
-            ) : (
-                <p>No new friend requests received.</p>
-            )}
-        </div>
-    );
+    if (!birthdaysFetched) {
+        return <Fetching />;
+    } else {
+        return (
+            <div className="w-2/3 mx-auto grid grid-cols-2">
+                <div>
+                    <h2 className="text-2xl">Friend requests received</h2>
+                    {props.requests.length > 0 ? (
+                        <ul className="flex flex-row flex-wrap">{userThumbnailComponents}</ul>
+                    ) : (
+                        <p className="my-2">No new friend requests received.</p>
+                    )}
+                </div>
+                <div className="mb-4">
+                    <div className="flex flex-row gap-2 items-center">
+                        <FontAwesomeIcon icon={faBirthdayCake} className="text-2xl" />
+                        <h2 className="text-2xl">Birthdays today</h2>
+                    </div>
+
+                    {birthdaysToday.length === 0 ? (
+                        <p className="my-2">No birthdays today.</p>
+                    ) : null}
+                    {birthdaysToday.length > 0 ? (
+                        <div className="my-4">
+                            <p className="text-xl">
+                                {month} {day}
+                            </p>
+                            <ul>{birthdaysToday}</ul>
+                        </div>
+                    ) : null}
+
+                    {nearBirthdays.length > 0 ? (
+                        <div className="flex flex-row gap-2 items-center mt-8">
+                            <FontAwesomeIcon icon={faCalendarDays} className="text-2xl" />
+                            <h2 className="text-2xl">Birthdays in the near future:</h2>
+                        </div>
+                    ) : null}
+                    {nearBirthdays.length === 0 ? (
+                        <p className="my-2">No birthdays today.</p>
+                    ) : null}
+                    {nearBirthdays.length > 0 ? <ul>{nearBirthdays}</ul> : null}
+                </div>
+            </div>
+        );
+    }
 };
 
 export default FriendRequests;
