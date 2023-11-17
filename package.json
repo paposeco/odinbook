@@ -7,7 +7,9 @@
     "start:dev": "webpack-cli serve --mode=development --env development --open --hot",
     "build": "webpack --mode=production --env production --progress",
     "lint": "eslint './src/**/*.{ts,tsx}'",
-    "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix"
+    "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d buil"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +31,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "gh-pages": "^6.0.0",
     "html-webpack-plugin": "^5.5.3",
     "postcss": "^8.4.29",
     "postcss-loader": "^7.3.3",
