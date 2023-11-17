@@ -18,7 +18,7 @@ export default function ScrollToTop() {
 
 root.render(
     <React.StrictMode>
-        <BrowserRouter basename="/odinbook">
+        <BrowserRouter basename={"/odinbook"}>
             <ScrollToTop />
             <App />
         </BrowserRouter>
