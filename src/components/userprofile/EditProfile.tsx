@@ -55,7 +55,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
     };
 
     return (
-        <div className="w-2/3 mx-auto bg-white rounded-lg p-8">
+        <div className="lg:w-2/3 mx-auto bg-white rounded-lg p-8 mt-8">
             <h2 className="text-2xl">Edit Profile</h2>
             <EditProfilePic apiurl={apiUrl} updateProfileImg={props.updateProfileImg} />
             <div>

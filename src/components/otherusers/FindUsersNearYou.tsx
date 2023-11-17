@@ -66,7 +66,7 @@ const FindUsers: React.FC<FuncProps> = function (props) {
 
     if (usersFetched) {
         return (
-            <div className="w-2/3 mx-auto">
+            <div className="lg:w-2/3 px-6 lg:px-0 mx-auto mt-8">
                 <h2 className="text-2xl">Odinbook users in {countryname}</h2>
                 {usersThumbnailComponents !== undefined && usersThumbnailComponents.length > 0 ? (
                     <div>

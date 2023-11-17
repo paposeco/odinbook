@@ -158,7 +158,7 @@ const FindUsers: React.FC<FuncProps> = function (props) {
 
     if (usersFetched) {
         return (
-            <div className="w-2/3 mx-auto">
+            <div className="lg:w-2/3 px-6 lg:px-0 mx-auto mt-8">
                 <h2 className="text-2xl mb-2">Browse Odinbook Users</h2>
                 <div className="flex flex-row gap-8">
                     <form

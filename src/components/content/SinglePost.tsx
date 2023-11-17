@@ -14,8 +14,8 @@ interface FuncProps {
 }
 
 const SinglePost: React.FC<FuncProps> = function (props) {
-    const [facebookID, setFacebookID] = useState(localStorage.getItem("facebookid"));
-    const [token, setToken] = useState(localStorage.getItem("token"));
+    const facebookID = localStorage.getItem("facebookid");
+    const token = localStorage.getItem("token");
     const [postInfo, setPostInfo] = useState<Post>();
     const {postID} = useParams();
     const [commentsToDisplay, setCommentsToDisplay] = useState<JSX.Element[]>();
@@ -181,19 +181,31 @@ const SinglePost: React.FC<FuncProps> = function (props) {
         return <Fetching />;
     } else {
         return (
-            <div className="flex flex-col gap-1 my-8 bg-white shadow rounded-lg py-8 w-2/3 mx-auto">
+            <div className="flex flex-col gap-1 my-8 bg-white shadow rounded-lg py-8 lg:w-2/3 sm:px-4 lg:px-0 mx-auto mt-8">
                 <div className="flex flex-row gap-4 content-center px-5">
                     <div className="flex flex-row content-center justify-center">
-                        <img
-                            src={props.apiurl + postInfo.author.profile_pic}
-                            alt="profilepic"
-                            className="w-10 h-10 rounded-full m-auto"
-                        />
+                        <Link
+                            to={
+                                postInfo.author.facebook_id === facebookID
+                                    ? "/profile"
+                                    : `../user/${postInfo.author.facebook_id}`
+                            }
+                        >
+                            <img
+                                src={props.apiurl + postInfo.author.profile_pic}
+                                alt="profilepic"
+                                className="w-10 h-10 rounded-full m-auto object-cover aspect-square"
+                            />
+                        </Link>
                     </div>
                     <div>
                         <p>
                             <Link
-                                to={`user/${postInfo.author.facebook_id}`}
+                                to={
+                                    postInfo.author.facebook_id === facebookID
+                                        ? "/profile"
+                                        : `../user/${postInfo.author.facebook_id}`
+                                }
                                 className="no-underline text-gray-700 text-lg font-semibold"
                             >
                                 {postInfo.author.display_name}
@@ -201,7 +213,7 @@ const SinglePost: React.FC<FuncProps> = function (props) {
                         </p>
                         <p>
                             <Link
-                                to={`user/${postInfo.author.facebook_id}/post/${postInfo.id}`}
+                                to={`../user/${postInfo.author.facebook_id}/post/${postInfo.id}`}
                                 className="no-underline text-gray-500"
                             >
                                 {prettydate}
@@ -251,7 +263,7 @@ const SinglePost: React.FC<FuncProps> = function (props) {
                             <img
                                 src={apiUrl + profilePic}
                                 alt="profilepic"
-                                className="w-10 h-10 rounded-full pt-0.5"
+                                className="w-10 h-10 rounded-full pt-0.5 object-cover aspect-square"
                             />
                             <form
                                 action=""
@@ -266,6 +278,7 @@ const SinglePost: React.FC<FuncProps> = function (props) {
                                     placeholder="Comment"
                                     onChange={handleChange}
                                     className="rounded-full w-full"
+                                    autoFocus={true}
                                 />
                                 <input
                                     type="submit"

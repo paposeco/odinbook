@@ -6,6 +6,7 @@ import {DateTime} from "luxon";
 import {faBirthdayCake} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCalendarDays} from "@fortawesome/free-regular-svg-icons";
+import {faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import Fetching from "components/Fetching";
 
 interface FuncProps {
@@ -94,19 +95,11 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
         return <Fetching />;
     } else {
         return (
-            <div className="w-2/3 mx-auto grid grid-cols-2">
-                <div>
-                    <h2 className="text-2xl">Friend requests received</h2>
-                    {props.requests.length > 0 ? (
-                        <ul className="flex flex-row flex-wrap">{userThumbnailComponents}</ul>
-                    ) : (
-                        <p className="my-2">No new friend requests received.</p>
-                    )}
-                </div>
+            <div className="lg:w-2/3 w-full sm:px-4 lg:px-0 mx-auto lg:grid lg:grid-cols-2 mt-8">
                 <div className="mb-4">
                     <div className="flex flex-row gap-2 items-center">
-                        <FontAwesomeIcon icon={faBirthdayCake} className="text-2xl" />
-                        <h2 className="text-2xl">Birthdays today</h2>
+                        <FontAwesomeIcon icon={faBirthdayCake} className="text-xl sm:text-2xl" />
+                        <h2 className="text-xl sm:text-2xl">Birthdays today</h2>
                     </div>
 
                     {birthdaysToday.length === 0 ? (
@@ -123,14 +116,28 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
 
                     {nearBirthdays.length > 0 ? (
                         <div className="flex flex-row gap-2 items-center mt-8">
-                            <FontAwesomeIcon icon={faCalendarDays} className="text-2xl" />
-                            <h2 className="text-2xl">Birthdays in the near future:</h2>
+                            <FontAwesomeIcon
+                                icon={faCalendarDays}
+                                className="text-xl sm:text-2xl"
+                            />
+                            <h2 className="text-xl sm:text-2xl">Birthdays in the near future:</h2>
                         </div>
                     ) : null}
-                    {nearBirthdays.length === 0 ? (
-                        <p className="my-2">No birthdays today.</p>
-                    ) : null}
                     {nearBirthdays.length > 0 ? <ul>{nearBirthdays}</ul> : null}
+                </div>
+                <div className="mt-8 lg:mt-0">
+                    <div className="flex flex-row gap-2 items-center">
+                        <FontAwesomeIcon icon={faUserGroup} className="text-xl sm:text-2xl" />
+                        <h2 className="text-xl sm:text-2xl">Friend requests received</h2>
+                    </div>
+
+                    {props.requests.length > 0 ? (
+                        <ul className="flex flex-row flex-wrap content-center">
+                            {userThumbnailComponents}
+                        </ul>
+                    ) : (
+                        <p className="my-2">No new friend requests received.</p>
+                    )}
                 </div>
             </div>
         );

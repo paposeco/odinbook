@@ -28,7 +28,7 @@ const FriendRequestsSent: React.FC<FuncProps> = function (props) {
         setUserThumbnailComponents(componentsArray);
     }, []);
     return (
-        <div className="w-2/3 mx-auto">
+        <div className="lg:w-2/3 sm:px-6 lg:px-0 mx-auto mt-8">
             <h2 className="text-2xl mb-2">Friend requests sent</h2>
             {props.requestssent.length > 0 ? (
                 <ul>{userThumbnailComponents}</ul>

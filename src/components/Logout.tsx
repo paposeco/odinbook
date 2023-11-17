@@ -14,7 +14,7 @@ const Logout: React.FC<FuncProps> = function (props) {
     };
 
     return (
-        <div>
+        <div className="sm:w-2/3 mx-auto mt-8">
             <h2 className="text-2xl">Logout</h2>
             Are you sure you want to logout?
             <div className="flex flex-row gap-2">

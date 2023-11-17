@@ -62,7 +62,7 @@ const FriendsFriendsList: React.FC<FuncProps> = (props) => {
         return <Fetching />;
     } else {
         return (
-            <div className="w-2/3 mx-auto">
+            <div className="lg:w-2/3 sm:px-6 lg:px-0 mx-auto mt-8">
                 <h2 className="text-2xl mb-2">Friends</h2>
                 <ul className="flex flex-row flex-wrap">{friendsThumbnailComponents}</ul>
             </div>

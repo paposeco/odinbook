@@ -59,7 +59,7 @@ const FriendsList: React.FC<FuncProps> = (props) => {
 
     if (friendsFetched) {
         return (
-            <div className="w-2/3 mx-auto">
+            <div className="lg:w-2/3 sm:px-6 lg:px-0 mx-auto mt-8">
                 <h2 className="text-2xl mb-2">Friends</h2>
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-row gap-2 items-center">

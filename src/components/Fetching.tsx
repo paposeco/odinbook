@@ -6,7 +6,6 @@ const Fetching: React.FC = function () {
     const [ballAngle, setBallAngle] = useState(0);
     const [ballClass, setBallClass] = useState("w-min rotate-0");
     const classwidth = "w-min ";
-    const [started, setStarted] = useState(false);
 
     const currAngle = useRef(0);
     useEffect(() => {
@@ -22,7 +21,7 @@ const Fetching: React.FC = function () {
             setBallClass(classwidth + "rotate-" + newAngle);
             currAngle.current = newAngle;
         };
-        const interval = setInterval(changeAngle, 100);
+        const interval = setInterval(changeAngle, 500);
         return () => clearInterval(interval);
     }, []);
 

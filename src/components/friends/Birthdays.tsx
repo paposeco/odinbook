@@ -36,22 +36,24 @@ const Birthdays: React.FC<FuncProps> = function (props) {
                 </div>
             ) : null}
 
-            <div className="flex flex-row items-center">
+            <div className="flex flex-row items-center ml-6 lg:ml-6">
                 <Link to={`/user/${props.friendinfo.facebookid}/`}>
                     <img
                         src={props.apirul + props.friendinfo.profilepic}
                         alt="profilepic"
-                        className="w-56 h-56 rounded-full aspect-square object-cover mr-4"
+                        className="lg:w-56 lg:h-56 sm:w-36 sm:h-36 w-20 h-20 rounded-full aspect-square object-cover mr-4"
                     />
                 </Link>
 
-                <Link
-                    to={`/user/${props.friendinfo.facebookid}/`}
-                    className="text-lg text-slate-800"
-                >
-                    {props.friendinfo.displayname}
-                </Link>
-                <span className="text-lg text-slate-800">, {age} years old</span>
+                <div className="flex flex-col">
+                    <Link
+                        to={`/user/${props.friendinfo.facebookid}/`}
+                        className="text-lg text-slate-800"
+                    >
+                        {props.friendinfo.displayname}
+                    </Link>
+                    <span className="text-lg text-slate-800">{age} years old</span>
+                </div>
             </div>
         </div>
     );

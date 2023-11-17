@@ -22,7 +22,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
     const [imgSrc, setImgSrc] = useState("");
     const [prettydate, setprettydate] = useState("");
     const apiUrl = props.apiurl;
-    const facebookID = props.facebookid;
+    const currUserfacebookID = localStorage.getItem("facebookid");
     const postAuthor = props.postinfo.author.facebook_id;
     const profilePic = localStorage.getItem("profilepic");
     const token = localStorage.getItem("token");
@@ -39,13 +39,16 @@ const PostComponent: React.FC<FuncProps> = function (props) {
 
     const handleClickLike = async function (event: React.MouseEvent) {
         try {
-            const response = await fetch(apiUrl + facebookID + "/posts/" + postInfo.id + "/like", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+            const response = await fetch(
+                apiUrl + currUserfacebookID + "/posts/" + postInfo.id + "/like",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            });
+            );
 
             if (response.status === 200) {
                 const prevPostInfo = structuredClone(postInfo);
@@ -53,6 +56,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
                 setPostInfo(prevPostInfo);
                 setLikeButton(<FontAwesomeIcon icon={thumbusUpSolid} />);
                 setLikeText("Liked");
+                setLiked(true);
             }
         } catch (err) {
             console.log(err);
@@ -72,7 +76,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
         setCommentBox(false);
         try {
             const response = await fetch(
-                apiUrl + facebookID + "/posts/" + postInfo.id + "/comment",
+                apiUrl + currUserfacebookID + "/posts/" + postInfo.id + "/comment",
                 {
                     method: "POST",
                     headers: {
@@ -121,7 +125,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
                 if (postInfo.likes.length > 0) {
                     const likesArray = postInfo.likes;
                     for (let i = 0; i < likesArray.length; i++) {
-                        if (likesArray[i]["facebook_id"] === facebookID) {
+                        if (likesArray[i]["facebook_id"] === currUserfacebookID) {
                             setLikeButton(<FontAwesomeIcon icon={thumbusUpSolid} />);
                             setLikeText("Liked");
                             setLiked(true);
@@ -150,19 +154,27 @@ const PostComponent: React.FC<FuncProps> = function (props) {
         <li key={postInfo.id} className="flex flex-col gap-1 my-8 bg-white shadow rounded-lg py-8">
             <div className="flex flex-row gap-4 content-center px-5">
                 <div className="flex flex-row content-center justify-center">
-                    <img
-                        src={props.apiurl + postInfo.author.profile_pic}
-                        alt="profilepic"
-                        className="w-10 h-10 rounded-full m-auto"
-                    />
+                    <Link
+                        to={
+                            postAuthor === currUserfacebookID
+                                ? "/profile"
+                                : `../user/${postInfo.author.facebook_id}`
+                        }
+                    >
+                        <img
+                            src={props.apiurl + postInfo.author.profile_pic}
+                            alt="profilepic"
+                            className="w-10 h-10 rounded-full m-auto object-cover aspect-square"
+                        />
+                    </Link>
                 </div>
                 <div>
                     <p>
                         <Link
                             to={
-                                postAuthor === facebookID
+                                postAuthor === currUserfacebookID
                                     ? "/profile"
-                                    : `user/${postInfo.author.facebook_id}`
+                                    : `../user/${postInfo.author.facebook_id}`
                             }
                             className="no-underline text-gray-700 text-lg font-semibold"
                         >
@@ -171,7 +183,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
                     </p>
                     <p>
                         <Link
-                            to={`user/${postInfo.author.facebook_id}/post/${postInfo.id}`}
+                            to={`../user/${postInfo.author.facebook_id}/post/${postInfo.id}`}
                             className="no-underline text-gray-500"
                         >
                             {prettydate}
@@ -237,6 +249,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
                                 placeholder="Comment"
                                 onChange={handleChange}
                                 className="rounded-full w-full"
+                                autoFocus={true}
                             />
                             <input
                                 type="submit"

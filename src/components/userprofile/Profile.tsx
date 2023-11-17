@@ -66,8 +66,8 @@ const Profile: React.FC<FuncProps> = (props) => {
     }, []);
     if (infoFetched) {
         return (
-            <div className="w-2/3 mx-auto">
-                <div className="flex flex-row gap-8">
+            <div className="lg:w-2/3 sm:px-6 lg:px-0 mx-auto mt-8">
+                <div className="flex flex-col sm:flex-row gap-8 mb-12">
                     <img
                         src={apiUrl + userInfo.profile_pic}
                         alt="profilepic"

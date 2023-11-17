@@ -86,10 +86,10 @@ const WhatsOnYourMind: React.FC<FuncProps> = (props) => {
     return (
         <div className="bg-white rounded-lg shadow">
             {!formVisible ? (
-                <div className="flex flex-row justify-start content-center p-8 my-4 gap-8">
+                <div className="flex flex-row justify-start content-center p-4 sm:p-8 my-4 sm:gap-8 gap-4">
                     <div>
                         <img
-                            className="w-10 h-10 rounded-full object-cover aspect-square"
+                            className="sm:w-10 sm:h-10 w-8 h-8 rounded-full object-cover aspect-square"
                             src={props.apiurl + profile_pic}
                             alt="profilepic"
                         />
@@ -103,10 +103,10 @@ const WhatsOnYourMind: React.FC<FuncProps> = (props) => {
             ) : null}
 
             {formVisible ? (
-                <div className="bg-white rounded-lg p-8 my-4">
-                    <div className="flex flex-row gap-4">
+                <div className="bg-white rounded-lg p-4 sm:p-8 my-4">
+                    <div className="flex flex-row gap-4 items-center">
                         <img
-                            className="w-10 h-10 rounded-full"
+                            className="sm:w-10 sm:h-10 w-8 h-8 rounded-full object-cover aspect-square"
                             src={props.apiurl + profile_pic}
                             alt="profilepic"
                         />

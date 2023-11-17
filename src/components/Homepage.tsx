@@ -41,7 +41,6 @@ const Homepage: React.FC<FuncProps> = (props) => {
                     }
                 );
                 const responseData = await response.json();
-                console.log("fetch");
                 const componentsArray = [...postsToDisplay];
                 responseData.timelinePosts.map((apost: Post) => {
                     componentsArray.push(
@@ -49,8 +48,8 @@ const Homepage: React.FC<FuncProps> = (props) => {
                             postinfo={apost}
                             key={apost.id}
                             apiurl={apiUrl}
-                            facebookid={facebookID}
                             userprofileimg={profilePic}
+                            facebookid={facebookID}
                         />
                     );
                 });
@@ -119,7 +118,7 @@ const Homepage: React.FC<FuncProps> = (props) => {
         return <Fetching />;
     } else {
         return (
-            <div className="my-8 w-2/3 mx-auto">
+            <div className="my-8 lg:w-2/3 mx-auto">
                 <WhatsOnYourMind apiurl={apiUrl} newpost={newPostCreated} userprofile={false} />
                 {postsToDisplay.length > 0 ? <ul>{postsToDisplay}</ul> : <p>No posts to display</p>}
             </div>

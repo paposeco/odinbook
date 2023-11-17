@@ -33,8 +33,27 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     const [statusChecked, setStatusChecked] = useState(false);
     const [friendStatus, setFriendStatus] = useState(false);
     const [friendRequestSent, setFriendRequestSent] = useState(false);
+    const [friendRequestReceived, setFriendRequesReceived] = useState(false);
     const [countryDisplayName, setCountryDisplayName] = useState("");
     const [userFriends, setUserFriends] = useState("");
+
+    const acceptfriend = async function (event: React.MouseEvent) {
+        try {
+            const response = await fetch(apiUrl + facebookid + "/acceptfriend/" + userfacebookid, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.status === 201) {
+                setInfoFetched(false);
+                setStatusChecked(false);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(() => {
         const checkFriendStatus = async function () {
@@ -50,9 +69,11 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                     }
                 );
                 const responseData = await response.json();
+
                 setFriendStatus(responseData.friends);
                 if (!responseData.friends) {
                     setFriendRequestSent(responseData.requestsent);
+                    setFriendRequesReceived(responseData.requestreceived);
                 }
 
                 setStatusChecked(true);
@@ -60,10 +81,11 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                 console.log(err);
             }
         };
-        if (!friendStatus) {
+        if (!statusChecked) {
             checkFriendStatus();
         }
-    }, []);
+    }, [statusChecked]);
+
     useEffect(() => {
         const fetchUserInfo = async function () {
             const fetchurl = props.apiurl + facebookid + "/otheruserprofile/" + userfacebookid;
@@ -110,7 +132,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
         if (!infoFetched) {
             fetchUserInfo();
         }
-    }, []);
+    }, [infoFetched]);
 
     // add friend
     const handleClick = async function (event: React.MouseEvent) {
@@ -144,8 +166,8 @@ const UserProfile: React.FC<FuncProps> = (props) => {
         return <Fetching />;
     } else if (infoFetched && statusChecked) {
         return (
-            <div className="w-2/3 mx-auto">
-                <div className="flex flex-row gap-8">
+            <div className="lg:w-2/3 sm:px-6 lg:px-0 mx-auto mt-8">
+                <div className="flex flex-col sm:flex-row gap-8 mb-12">
                     <img
                         src={apiUrl + userInfo.profile_pic}
                         alt="profilepic"
@@ -178,7 +200,17 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                                 <p>Friend request sent</p>
                             </div>
                         ) : null}
-                        {!friendStatus && !friendRequestSent ? (
+
+                        {!friendStatus && !friendRequestSent && friendRequestReceived ? (
+                            <div className="flex flex-row gap-2 items-center">
+                                <FontAwesomeIcon icon={faUserClock} className="w-5" />
+                                <button onClick={acceptfriend} className="underline">
+                                    Accept friend request
+                                </button>
+                            </div>
+                        ) : null}
+
+                        {!friendStatus && !friendRequestSent && !friendRequestReceived ? (
                             <div className="flex flex-row gap-2 items-center">
                                 <FontAwesomeIcon icon={faUserPlus} className="w-5" />
                                 <button onClick={handleClick}>Add Friend</button>
