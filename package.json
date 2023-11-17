@@ -9,7 +9,7 @@
     "lint": "eslint './src/**/*.{ts,tsx}'",
     "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d buil"
+    "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "",
