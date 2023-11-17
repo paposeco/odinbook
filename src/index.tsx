@@ -16,6 +16,7 @@ export default function ScrollToTop() {
     return null;
 }
 
+//basename to githubpages
 root.render(
     <React.StrictMode>
         <BrowserRouter basename={"/odinbook"}>
