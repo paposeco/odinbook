@@ -31,7 +31,7 @@ const App: React.FC = () => {
     const [requestsSent, setRequestSent] = useState<Friend[]>([]);
     const [userCountry, setUserCountry] = useState("");
     const [requestsNumber, setRequestsNumber] = useState(0);
-    const apiURL = "https://odinbookbackend-production.up.railway.app";
+    const apiURL = "https://odinbookbackend-production.up.railway.app/";
     const authBearerToken = function(childtoken: string, childfacebookdid: string): void {
         if (token === "") {
             setToken(childtoken);
