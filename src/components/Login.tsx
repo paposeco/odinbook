@@ -15,7 +15,7 @@ const Login: React.FC<FuncProps> = function (props) {
     const handleSubmit = async function (event) {
         event.preventDefault();
         try {
-            const response = await fetch("http://localhost:3000/guestlogin", {
+            const response = await fetch(props.apiurl + "guestlogin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
