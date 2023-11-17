@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Fetching from "./Fetching";
 
 interface FuncProps {
@@ -11,11 +11,13 @@ const Loggedin: React.FC<FuncProps> = (props) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log(document.cookie);
         if (document.cookie !== "" && !tokenFetched) {
             setTokenFetched(true);
 
             const fullCookie = document.cookie;
             const indexToken = fullCookie.indexOf("token");
+            console.log(indexToken);
             const indexFacebook = fullCookie.indexOf("facebook");
             const token = fullCookie.slice(indexToken + 6, indexFacebook - 2);
             const facebookid = fullCookie.slice(indexFacebook + 11);
