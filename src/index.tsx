@@ -19,7 +19,7 @@ export default function ScrollToTop() {
 //basename to githubpages
 root.render(
     <React.StrictMode>
-        <BrowserRouter basename={`/${process.env.PUBLIC_URL}`}>
+        <BrowserRouter basename={"/odinbook"}>
             <ScrollToTop />
             <App />
         </BrowserRouter>
