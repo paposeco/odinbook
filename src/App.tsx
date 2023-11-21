@@ -19,6 +19,7 @@ import type {EditableProfile, Friend} from "./common/types";
 import Fetching from "components/Fetching";
 import Sidebar from "components/Sidebar";
 import Footer from "components/Footer";
+import Teste from "components/Teste";
 
 const App: React.FC = () => {
     const [token, setToken] = useState(localStorage.getItem("token"));
@@ -151,6 +152,7 @@ const App: React.FC = () => {
                             path="/loggedin"
                             element={<Loggedin updateToken={authBearerToken} />}
                         />
+                        <Route path="/teste" element={<Teste />} />
                     </Routes>
                 </div>
                 <Footer />
