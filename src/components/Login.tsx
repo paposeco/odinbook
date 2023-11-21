@@ -39,6 +39,10 @@ const Login: React.FC<FuncProps> = function (props) {
         setpwd(event.currentTarget.value);
     };
 
+    useEffect(() => {
+        console.log("inside login");
+    });
+
     return (
         <div className="px-8">
             <h1 className="text-2xl mb-4">Login</h1>
