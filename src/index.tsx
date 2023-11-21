@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import ReactDOM from "react-dom/client";
-import {BrowserRouter, useLocation, HashRouter} from "react-router-dom";
+import {BrowserRouter, useLocation} from "react-router-dom";
 import App from "./App";
 import "./styles/stylesheet.css";
 
@@ -19,13 +19,9 @@ export default function ScrollToTop() {
 //basename to githubpages
 root.render(
     <React.StrictMode>
-        <HashRouter basename="/odinbook">
+        <BrowserRouter basename={`/${process.env.PUBLIC_URL}`}>
             <ScrollToTop />
             <App />
-        </HashRouter>
-        {/* <BrowserRouter basename={"https://odinbook-production-0a2a.up.railway.app/"}>
-            <ScrollToTop />
-            <App />
-        </BrowserRouter> */}
+        </BrowserRouter>
     </React.StrictMode>
 );
