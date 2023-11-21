@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import Fetching from "./Fetching";
 
 interface FuncProps {
@@ -9,9 +9,11 @@ interface FuncProps {
 const Loggedin: React.FC<FuncProps> = (props) => {
     const [tokenFetched, setTokenFetched] = useState(false);
     const navigate = useNavigate();
+    const {valid} = useParams();
 
     useEffect(() => {
         console.log(document.cookie);
+        console.log(valid);
         if (document.cookie !== "" && !tokenFetched) {
             setTokenFetched(true);
 
