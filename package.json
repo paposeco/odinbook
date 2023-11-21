@@ -2,6 +2,7 @@
   "name": "odinbookfront",
   "version": "1.0.0",
   "description": "",
+  "homepage": "https://paposeco.github.io/odinbook",
   "main": "index.js",
   "scripts": {
     "start:dev": "webpack-cli serve --mode=development --env development --open --hot",
