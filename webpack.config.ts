@@ -17,7 +17,7 @@ const webpackConfig = (env): Configuration => ({
     output: {
         path: path.join(__dirname, "/dist"),
         filename: "build.js",
-        publicPath: "/",
+        publicPath: "/odinbook",
     },
     module: {
         rules: [
