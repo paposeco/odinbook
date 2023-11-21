@@ -148,7 +148,7 @@ const App: React.FC = () => {
                             element={<Login apiurl={apiURL} authbearertoken={authBearerToken} />}
                         />
                         <Route
-                            path="/loggedin/:valid"
+                            path="/loggedin"
                             element={<Loggedin updateToken={authBearerToken} />}
                         />
                     </Routes>
