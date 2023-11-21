@@ -11,10 +11,10 @@ const Loggedin: React.FC<FuncProps> = (props) => {
     const navigate = useNavigate();
     const {valid} = useParams();
 
-    useEffect(() =>{
-        console.log("inside loggedin")
-    })
-    '
+    useEffect(() => {
+        console.log("inside loggedin");
+    });
+
     useEffect(() => {
         console.log(document.cookie);
         console.log(valid);
