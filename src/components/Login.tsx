@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFacebookF} from "@fortawesome/free-brands-svg-icons";
@@ -38,6 +38,11 @@ const Login: React.FC<FuncProps> = function (props) {
     const handleChange = function (event) {
         setpwd(event.currentTarget.value);
     };
+
+    useEffect(() => {
+        console.log(document.cookie);
+    });
+
     return (
         <div className="px-8">
             <h1 className="text-2xl mb-4">Login</h1>
