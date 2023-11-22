@@ -149,7 +149,7 @@ const App: React.FC = () => {
                             element={<Login apiurl={apiURL} authbearertoken={authBearerToken} />}
                         />
                         <Route
-                            path="/loggedin"
+                            path="/loggedin/:aString"
                             element={<Loggedin updateToken={authBearerToken} />}
                         />
                         <Route path="/teste" element={<Teste />} />

@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import ReactDOM from "react-dom/client";
-import {HashRouter, useLocation} from "react-router-dom";
+import {BrowserRouter, useLocation} from "react-router-dom";
 import App from "./App";
 import "./styles/stylesheet.css";
 
@@ -19,9 +19,9 @@ export default function ScrollToTop() {
 //basename to githubpages
 root.render(
     <React.StrictMode>
-        <HashRouter>
+        <BrowserRouter>
             <ScrollToTop />
             <App />
-        </HashRouter>
+        </BrowserRouter>
     </React.StrictMode>
 );

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import Fetching from "./Fetching";
 
 interface FuncProps {
@@ -9,27 +9,16 @@ interface FuncProps {
 const Loggedin: React.FC<FuncProps> = (props) => {
     const [tokenFetched, setTokenFetched] = useState(false);
     const navigate = useNavigate();
-    const {valid} = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
-        console.log("inside loggedin");
-    });
-
-    useEffect(() => {
-        console.log(document.cookie);
-        console.log(valid);
-        if (document.cookie !== "" && !tokenFetched) {
+        const logintoken = searchParams.get("token");
+        const facebookid = searchParams.get("facebookid");
+        if (!tokenFetched) {
             setTokenFetched(true);
-
-            const fullCookie = document.cookie;
-            const indexToken = fullCookie.indexOf("token");
-            console.log(indexToken);
-            const indexFacebook = fullCookie.indexOf("facebook");
-            const token = fullCookie.slice(indexToken + 6, indexFacebook - 2);
-            const facebookid = fullCookie.slice(indexFacebook + 11);
-            props.updateToken(token, facebookid);
-            localStorage.setItem("token", token);
+            localStorage.setItem("token", logintoken);
             localStorage.setItem("facebookid", facebookid);
+            props.updateToken(logintoken, facebookid);
             navigate("/");
         }
     }, []);
