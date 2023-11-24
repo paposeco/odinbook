@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {faPencil} from "@fortawesome/free-solid-svg-icons";
-import {faFloppyDisk} from "@fortawesome/free-solid-svg-icons";
+import {useNavigate} from "react-router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 type FormValues = {
@@ -23,6 +23,8 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
     const [showImageForm, setShowImageForm] = useState(false);
     const [imgchanged, setimgchanged] = useState(false);
 
+    const navigate = useNavigate();
+
     const onSubmitImage = async function (data) {
         if (data.newprofilepic.length === 0) {
             return;
@@ -38,11 +40,13 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
                 },
                 body: formData
             });
-            const responseData = await response.json();
-            localStorage.setItem("profilepic", responseData.filepath);
-            setProfilePicLocation(props.apiurl + responseData.filepath);
-            setShowImageForm(false);
-            props.updateProfileImg(responseData.filepath);
+            if (response.status === 201) {
+                const responseData = await response.json();
+                localStorage.setItem("profilepic", responseData.filepath);
+                setProfilePicLocation(props.apiurl + responseData.filepath);
+                setShowImageForm(false);
+                props.updateProfileImg(responseData.filepath);
+            }
         } catch (err) {
             console.log(err);
         }
