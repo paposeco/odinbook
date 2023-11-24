@@ -143,7 +143,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
         }
 
         if (postInfo !== undefined && postInfo.post_image !== undefined) {
-            if (postInfo.post_image.includes("images") && postInfo.post_image !== "") {
+            if (postInfo.post_image.includes(postAuthor) && postInfo.post_image !== "") {
                 setImgSrc(apiUrl + postInfo.post_image);
             } else if (postInfo.post_image !== "") {
                 setImgSrc(postInfo.post_image);
