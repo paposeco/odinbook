@@ -89,7 +89,7 @@ const Profile: React.FC<FuncProps> = (props) => {
                                 <p>{userInfo.gender}</p>
                             </div>
                         ) : null}
-                        {userInfo.country !== undefined ? (
+                        {userInfo.country !== undefined && countryDisplayName !== "" ? (
                             <div className="flex flex-row gap-2 items-center">
                                 <FontAwesomeIcon icon={faGlobe} className="w-5" />
                                 <p>{countryDisplayName}</p>
