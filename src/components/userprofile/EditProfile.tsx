@@ -42,7 +42,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                     display_name: data.displayname,
                     birthday: data.birthday,
                     gender: data.gender,
-                    country: data.country.value
+                    country: data.country === "" ? "notselected" : data.country
                 })
             });
             const responseData = await response.json();
