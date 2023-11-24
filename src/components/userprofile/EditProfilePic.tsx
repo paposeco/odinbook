@@ -22,7 +22,7 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
     );
     const [showImageForm, setShowImageForm] = useState(false);
     const [imgchanged, setimgchanged] = useState(false);
-
+    const [updatedpicname, setupdatedpicname] = useState("");
     const navigate = useNavigate();
 
     const onSubmitImage = async function (data) {
@@ -32,21 +32,23 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
         const formData = new FormData();
         formData.append("newprofilepic", data.newprofilepic[0]);
         try {
-            const response = await fetch(props.apiurl + facebookID + "/uploadit", {
-                method: "POST",
-                headers: {
-                    // "Content-Type": "multipart/form-data;",
-                    Authorization: `Bearer ${token}`
-                },
-                body: formData
-            });
+            const response = await fetch(
+                props.apiurl + facebookID + "/uploadit/" + updatedpicname,
+                {
+                    method: "POST",
+                    headers: {
+                        // "Content-Type": "multipart/form-data;",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: formData
+                }
+            );
             if (response.status === 201) {
                 const responseData = await response.json();
                 localStorage.setItem("profilepic", responseData.filepath);
                 setProfilePicLocation(props.apiurl + responseData.filepath);
                 setShowImageForm(false);
                 props.updateProfileImg(responseData.filepath);
-                navigate("/");
             }
         } catch (err) {
             console.log(err);
@@ -59,6 +61,20 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
     const handleCancel = function (event: React.MouseEvent) {
         setShowImageForm(false);
     };
+
+    useEffect(() => {
+        const currentPicName = function () {
+            const newornot = profilepiclocation.includes("new");
+            if (newornot) {
+                console.log("includes");
+                setupdatedpicname("profilepic");
+            } else {
+                console.log("doesnt include");
+                setupdatedpicname("newprofilepic");
+            }
+        };
+        currentPicName();
+    }, []);
 
     return (
         <div className="my-2">
