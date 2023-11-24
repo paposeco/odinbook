@@ -31,6 +31,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
     const navigate = useNavigate();
     const onSubmit = async function (data) {
         try {
+            console.log(data);
             const response = await fetch(apiUrl + facebookID + "/editprofile", {
                 method: "POST",
                 headers: {
@@ -41,7 +42,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                     display_name: data.displayname,
                     birthday: data.birthday,
                     gender: data.gender,
-                    country: data.country
+                    country: data.country.value
                 })
             });
             const responseData = await response.json();
