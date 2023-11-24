@@ -46,6 +46,7 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
                 setProfilePicLocation(props.apiurl + responseData.filepath);
                 setShowImageForm(false);
                 props.updateProfileImg(responseData.filepath);
+                navigate("/");
             }
         } catch (err) {
             console.log(err);
@@ -58,11 +59,6 @@ const EditProfilePic: React.FC<FuncProps> = function (props) {
     const handleCancel = function (event: React.MouseEvent) {
         setShowImageForm(false);
     };
-    useEffect(() => {
-        if (imgchanged) {
-            setProfilePicLocation(props.apiurl + localStorage.getItem("profilepic"));
-        }
-    }, [imgchanged]);
 
     return (
         <div className="my-2">

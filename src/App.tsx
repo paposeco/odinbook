@@ -107,9 +107,7 @@ const App: React.FC = () => {
     }, []);
 
     const updateProfileImg = function (filepath: string): void {
-        localStorage.removeItem("profilepic");
         setprofilepic(filepath);
-        localStorage.setItem("profilepic", filepath);
     };
 
     const userLoggedOut = function () {

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {faFacebook} from "@fortawesome/free-brands-svg-icons";
 import {faBell} from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +14,7 @@ interface FuncProps {
 const Header: React.FC<FuncProps> = (props) => {
     const [clickedProfile, setClickedProfile] = useState(false);
     const [clickedNotifications, setClickedNotifications] = useState(false);
+    const [imgsrc, setImgSrc] = useState(props.apiurl + props.profilepic);
 
     const handleClick: React.MouseEventHandler = function (event) {
         if (clickedProfile) {
@@ -31,7 +32,6 @@ const Header: React.FC<FuncProps> = (props) => {
     const handleClickNotifications: React.MouseEventHandler = function (event) {
         setClickedNotifications(true);
     };
-
     if (props.apiurl === "" && props.profilepic === "") {
         return (
             <div className="mb-4 w-full mx-auto">
