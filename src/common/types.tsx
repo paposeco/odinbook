@@ -18,7 +18,7 @@ export interface UserProfile {
     guest: boolean;
 }
 
-enum GenderEnum {
+export enum GenderEnum {
     female = "Female",
     male = "Male",
     other = "Other",

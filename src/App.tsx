@@ -15,7 +15,7 @@ import FindUsers from "components/otherusers/FindUsers";
 import FindUsersNearYour from "components/otherusers/FindUsersNearYou";
 import Profile from "components/userprofile/Profile";
 import EditProfile from "components/userprofile/EditProfile";
-import type {EditableProfile, Friend} from "./common/types";
+import type {EditableProfile, Friend, GenderEnum} from "./common/types";
 import Fetching from "components/Fetching";
 import Sidebar from "components/Sidebar";
 import Footer from "components/Footer";
@@ -135,6 +135,15 @@ const App: React.FC = () => {
 
     const updateCountry = function (countryvalue: string) {
         setUserCountry(countryvalue);
+        const currProfile = userProfile;
+        currProfile.country = countryvalue;
+        setUserProfile(currProfile);
+    };
+
+    const updateGender = function (gender: GenderEnum) {
+        const currProfile = userProfile;
+        currProfile.gender = gender;
+        setUserProfile(currProfile);
     };
 
     // function to update country on editprofile
@@ -199,6 +208,7 @@ const App: React.FC = () => {
                                             updateProfileImg={updateProfileImg}
                                             currentprofile={userProfile}
                                             updateCountry={updateCountry}
+                                            updateGender={updateGender}
                                         />
                                     }
                                 />

@@ -10,6 +10,7 @@ interface FuncProps {
     updateProfileImg(arg1: string): void;
     currentprofile: EditableProfile;
     updateCountry(arg1: string): void;
+    updateGender(arg1: string): void;
 }
 
 const EditProfile: React.FC<FuncProps> = function (props) {
@@ -48,6 +49,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
             const responseData = await response.json();
             if (response.status === 201) {
                 props.updateCountry(data.country);
+                props.updateGender(data.gender);
                 navigate("/profile");
             }
         } catch (err) {
