@@ -190,14 +190,16 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                 usersThumbnailComponents !== undefined &&
                 usersThumbnailComponents.length > 0 ? (
                     <div>
-                        <ul className="flex flex-row flex-wrap">{usersThumbnailComponents}</ul>
+                        <ul className="flex flex-row flex-wrap justify-center">
+                            {usersThumbnailComponents}
+                        </ul>
                     </div>
                 ) : displayUsers && !displaySearchResults ? (
                     <p>You are friends with everyone in Odinbook.</p>
                 ) : null}
                 {displaySearchResults ? (
                     <div>
-                        <ul className="flex flex-row flex-wrap">{searchResults}</ul>
+                        <ul className="flex flex-row flex-wrap justify-center">{searchResults}</ul>
                     </div>
                 ) : null}
                 {displaySearchResults && searchResults.length === 0 ? (

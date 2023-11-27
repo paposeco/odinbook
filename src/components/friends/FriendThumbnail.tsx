@@ -66,7 +66,7 @@ const FriendThumbnail: React.FC<FuncProps> = (props) => {
     return (
         <li
             key={props.friend.facebook_id}
-            className="flex flex-col gap-2 justify-center w-60 bg-white rounded-lg p-6 m-6 "
+            className="flex flex-col gap-2 justify-center w-60 bg-white rounded-lg p-6 m-4 "
         >
             <Link to={userurl} className="text-center text-sm no-underline text-gray-700 font-bold">
                 {props.friend.display_name}

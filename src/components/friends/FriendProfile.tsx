@@ -36,6 +36,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
     const [friendRequestReceived, setFriendRequesReceived] = useState(false);
     const [countryDisplayName, setCountryDisplayName] = useState("");
     const [userFriends, setUserFriends] = useState("");
+    const [noposts, setnoposts] = useState("This user hasn't posted anything yet.");
 
     const acceptfriend = async function (event: React.MouseEvent) {
         try {
@@ -74,6 +75,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                 if (!responseData.friends) {
                     setFriendRequestSent(responseData.requestsent);
                     setFriendRequesReceived(responseData.requestreceived);
+                    setnoposts("Add user to see posts.");
                 }
 
                 setStatusChecked(true);
@@ -226,7 +228,12 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                         {userInfo.gender !== undefined && userInfo.gender !== "" ? (
                             <div className="flex flex-row gap-2 items-center">
                                 <FontAwesomeIcon icon={faVenusMars} className="w-5" />
-                                <p>{userInfo.gender}</p>
+                                <p>
+                                    {userInfo.gender.replace(
+                                        userInfo.gender[0],
+                                        userInfo.gender[0].toLocaleUpperCase
+                                    )}
+                                </p>
                             </div>
                         ) : null}
                         {userInfo.country ? (
@@ -256,7 +263,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                 {postsToDisplay.length > 0 ? (
                     <ul>{postsToDisplay}</ul>
                 ) : (
-                    <p className="my-4">This user hasn't posted anything yet.</p>
+                    <p className="my-4">{noposts}</p>
                 )}
             </div>
         );

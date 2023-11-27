@@ -86,6 +86,12 @@ const Header: React.FC<FuncProps> = (props) => {
                                     </p>
                                 </Link>
 
+                                <Link to="/friends" className="no-underline">
+                                    <p className="text-lg py-4 px-8 my-1 text-slate-800 bg-white shadow rounded-lg hover:bg-facebookblue hover:text-white">
+                                        Friends
+                                    </p>
+                                </Link>
+
                                 <Link to="/logout" className="no-underline">
                                     <p className="text-lg my-1 py-4 px-8 text-slate-800 bg-white shadow rounded-lg hover:bg-facebookblue hover:text-white">
                                         Logout
