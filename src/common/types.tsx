@@ -19,10 +19,10 @@ export interface UserProfile {
 }
 
 export enum GenderEnum {
-    female = "Female",
-    male = "Male",
-    other = "Other",
-    empty = "Empty"
+    female = "female",
+    male = "male",
+    other = "other",
+    empty = "empty"
 }
 
 export interface EditableProfile {

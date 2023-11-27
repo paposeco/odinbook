@@ -93,9 +93,9 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                         <label htmlFor="gender">Gender:</label>
                         <select name="gender" {...register("gender")}>
                             <option value="">Select one</option>
-                            <option value="Female">Female</option>
-                            <option value="Male">Male</option>
-                            <option value="Other">Other</option>
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                            <option value="other">Other</option>
                         </select>
                     </div>
                     <div>
