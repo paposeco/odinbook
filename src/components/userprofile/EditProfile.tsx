@@ -20,6 +20,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
     const currDate = new Date(Date.now());
     const currYear: number = currDate.getFullYear() - 12;
     const minAge: string = currYear + "-01-01";
+    const [birthdayDate, setBirthdayDate] = useState("");
     const {register, handleSubmit} = useForm<EditableProfile>({
         defaultValues: {
             displayname: props.currentprofile.displayname,
@@ -33,6 +34,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
     const onSubmit = async function (data) {
         try {
             console.log(data);
+            console.log(birthdayDate);
             const response = await fetch(apiUrl + facebookID + "/editprofile", {
                 method: "POST",
                 headers: {
@@ -55,6 +57,10 @@ const EditProfile: React.FC<FuncProps> = function (props) {
         } catch (err) {
             console.log(err);
         }
+    };
+
+    const handleChange = function (event: React.ChangeEvent<HTMLInputElement>) {
+        setBirthdayDate(event.target.value);
     };
 
     return (
@@ -87,6 +93,7 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                             max={minAge}
                             name="birthday"
                             {...register("birthday")}
+                            onChange={handleChange}
                         />
                     </div>
                     <div>
