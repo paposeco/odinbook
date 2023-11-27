@@ -231,7 +231,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                                 <p>
                                     {userInfo.gender.replace(
                                         userInfo.gender[0],
-                                        userInfo.gender[0].toLocaleUpperCase
+                                        userInfo.gender[0].toUpperCase()
                                     )}
                                 </p>
                             </div>
