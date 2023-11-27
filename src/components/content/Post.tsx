@@ -234,7 +234,7 @@ const PostComponent: React.FC<FuncProps> = function (props) {
                         <img
                             src={props.apiurl + profilePic}
                             alt="profilepic"
-                            className="w-10 h-10 rounded-full pt-0.5"
+                            className="w-10 h-10 rounded-full pt-0.5 object-cover aspect-square"
                         />
                         <form
                             action=""

@@ -33,8 +33,6 @@ const EditProfile: React.FC<FuncProps> = function (props) {
     const navigate = useNavigate();
     const onSubmit = async function (data) {
         try {
-            console.log(data);
-            console.log(birthdayDate);
             const response = await fetch(apiUrl + facebookID + "/editprofile", {
                 method: "POST",
                 headers: {
@@ -57,10 +55,6 @@ const EditProfile: React.FC<FuncProps> = function (props) {
         } catch (err) {
             console.log(err);
         }
-    };
-
-    const handleChange = function (event: React.ChangeEvent<HTMLInputElement>) {
-        setBirthdayDate(event.target.value);
     };
 
     return (

@@ -190,7 +190,7 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                 usersThumbnailComponents !== undefined &&
                 usersThumbnailComponents.length > 0 ? (
                     <div>
-                        <ul className="flex flex-row flex-wrap justify-center">
+                        <ul className="flex flex-row flex-wrap justify-between">
                             {usersThumbnailComponents}
                         </ul>
                     </div>

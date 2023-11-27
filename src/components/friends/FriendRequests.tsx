@@ -132,7 +132,7 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
                     </div>
 
                     {props.requests.length > 0 ? (
-                        <ul className="flex flex-row flex-wrap content-center justify-center">
+                        <ul className="flex flex-row flex-wrap content-center justify-between">
                             {userThumbnailComponents}
                         </ul>
                     ) : (
