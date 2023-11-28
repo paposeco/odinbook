@@ -12,6 +12,7 @@ interface FuncProps {
     sendrequest: boolean;
     requestsent: boolean;
     updaterequestsent(): void;
+    updatethumbnailarrayonrequests?(): void;
 }
 
 const FriendThumbnail: React.FC<FuncProps> = (props) => {
@@ -37,6 +38,7 @@ const FriendThumbnail: React.FC<FuncProps> = (props) => {
                 }
             );
             if (response.status === 201) {
+                props.updatethumbnailarrayonrequests();
                 navigate("/user/" + props.friend.facebook_id);
             }
         } catch (err) {

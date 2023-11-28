@@ -26,6 +26,13 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
     const month = now.monthLong;
     const day = now.day;
 
+    const updateRequestsOnAcceptFriend = function () {
+        console.log(userThumbnailComponents);
+        userThumbnailComponents.forEach((comp) => {
+            console.log(comp.key);
+        });
+    };
+
     useEffect(() => {
         const componentsArray = [];
         props.requests.map((auser) => {
@@ -38,6 +45,7 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
                     sendrequest={false}
                     requestsent={false}
                     updaterequestsent={props.updaterequestsent}
+                    updatethumbnailarrayonrequests={updateRequestsOnAcceptFriend}
                 />
             );
         });
