@@ -73,7 +73,7 @@ const FriendsList: React.FC<FuncProps> = (props) => {
                 </div>
 
                 {friendsThumbnailComponents.length > 0 ? (
-                    <ul className="flex flex-row flex-wrap justify-between">
+                    <ul className="flex flex-row flex-wrap justify-start">
                         {friendsThumbnailComponents}
                     </ul>
                 ) : (

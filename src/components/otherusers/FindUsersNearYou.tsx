@@ -70,7 +70,7 @@ const FindUsers: React.FC<FuncProps> = function (props) {
                 <h2 className="text-2xl">Odinbook users in {countryname}</h2>
                 {usersThumbnailComponents !== undefined && usersThumbnailComponents.length > 0 ? (
                     <div>
-                        <ul className="flex flex-row justify-between">
+                        <ul className="flex flex-row flex-wrap justify-start">
                             {usersThumbnailComponents}
                         </ul>
                     </div>

@@ -26,6 +26,7 @@ const FriendThumbnail: React.FC<FuncProps> = (props) => {
     const [requestStatus, setRequestStatus] = useState(props.requestsent);
 
     const acceptfriend = async function (event: React.MouseEvent) {
+        props.updatethumbnailarrayonrequests();
         try {
             const response = await fetch(
                 props.apiurl + facebookid + "/acceptfriend/" + props.friend.facebook_id,
@@ -38,7 +39,6 @@ const FriendThumbnail: React.FC<FuncProps> = (props) => {
                 }
             );
             if (response.status === 201) {
-                props.updatethumbnailarrayonrequests();
                 navigate("/user/" + props.friend.facebook_id);
             }
         } catch (err) {

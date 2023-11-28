@@ -28,9 +28,7 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
 
     const updateRequestsOnAcceptFriend = function () {
         console.log(userThumbnailComponents);
-        userThumbnailComponents.forEach((comp) => {
-            console.log(comp.key);
-        });
+        console.log(userThumbnailComponents.length);
     };
 
     useEffect(() => {
@@ -49,6 +47,7 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
                 />
             );
         });
+        console.log(componentsArray);
         setUserThumbnailComponents(componentsArray);
     }, []);
 
