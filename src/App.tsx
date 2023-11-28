@@ -133,6 +133,25 @@ const App: React.FC = () => {
         fetchRequestSent();
     };
 
+    const requestReceived = function () {
+        const fetchRequestReceived = async function () {
+            try {
+                const response = await fetch(apiURL + facebookID + "/headerinfo", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const responseData = await response.json();
+                setRequestReceived(responseData.userprofile.requests_received);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchRequestReceived();
+    };
+
     const updateCountry = function (countryvalue: string) {
         setUserCountry(countryvalue);
         const currProfile = userProfile;
@@ -233,6 +252,7 @@ const App: React.FC = () => {
                                             requests={requestsReceived}
                                             apiurl={apiURL}
                                             updaterequestsent={requestSent}
+                                            updaterequestsreceived={requestReceived}
                                         />
                                     }
                                 />

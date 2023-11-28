@@ -13,6 +13,7 @@ interface FuncProps {
     requests: Friend[];
     apiurl: string;
     updaterequestsent(): void;
+    updaterequestsreceived(): void;
 }
 
 const FriendRequests: React.FC<FuncProps> = function (props) {
@@ -26,11 +27,6 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
     const month = now.monthLong;
     const day = now.day;
 
-    const updateRequestsOnAcceptFriend = function () {
-        console.log(userThumbnailComponents);
-        console.log(userThumbnailComponents.length);
-    };
-
     useEffect(() => {
         const componentsArray = [];
         props.requests.map((auser) => {
@@ -43,11 +39,10 @@ const FriendRequests: React.FC<FuncProps> = function (props) {
                     sendrequest={false}
                     requestsent={false}
                     updaterequestsent={props.updaterequestsent}
-                    updatethumbnailarrayonrequests={updateRequestsOnAcceptFriend}
+                    updaterequestsreceived={props.updaterequestsreceived}
                 />
             );
         });
-        console.log(componentsArray);
         setUserThumbnailComponents(componentsArray);
     }, []);
 
