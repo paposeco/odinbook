@@ -87,7 +87,6 @@ const EditProfile: React.FC<FuncProps> = function (props) {
                             max={minAge}
                             name="birthday"
                             {...register("birthday")}
-                            onChange={handleChange}
                         />
                     </div>
                     <div>
