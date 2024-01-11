@@ -72,7 +72,6 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                 const responseData = await response.json();
 
                 setFriendStatus(responseData.friends);
-                console.log(responseData);
                 if (!responseData.friends) {
                     setFriendRequestSent(responseData.requestsent);
                     setFriendRequesReceived(responseData.requestreceived);
@@ -126,6 +125,8 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                     setUserFriends("Add " + responseData.display_name + " to see their friends.");
                 } else if (responseData.friend === 0) {
                     setUserFriends(responseData.display_name + " doesn't have any friends");
+                } else if (responseData.friends !== undefined) {
+                    setFriendStatus(true);
                 }
             } catch (err) {
                 console.log(err);
