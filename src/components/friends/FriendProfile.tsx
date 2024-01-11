@@ -72,6 +72,7 @@ const UserProfile: React.FC<FuncProps> = (props) => {
                 const responseData = await response.json();
 
                 setFriendStatus(responseData.friends);
+                console.log(responseData);
                 if (!responseData.friends) {
                     setFriendRequestSent(responseData.requestsent);
                     setFriendRequesReceived(responseData.requestreceived);
